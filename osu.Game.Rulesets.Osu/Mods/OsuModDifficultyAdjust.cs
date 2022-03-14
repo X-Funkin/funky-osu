@@ -9,13 +9,14 @@ using osu.Game.Rulesets.Mods;
 namespace osu.Game.Rulesets.Osu.Mods
 {
     public class OsuModDifficultyAdjust : ModDifficultyAdjust
-    {
+    {   
         [SettingSource("Circle Size", "Override a beatmap's set CS.", FIRST_SETTING_ORDER - 1, SettingControlType = typeof(DifficultyAdjustSettingsControl))]
         public DifficultyBindable CircleSize { get; } = new DifficultyBindable
         {
             Precision = 0.1f,
             MinValue = 0,
             MaxValue = 10,
+            ExtendedMinValue = -5,
             ExtendedMaxValue = 11,
             ReadCurrentFromDifficulty = diff => diff.CircleSize,
         };
@@ -26,6 +27,7 @@ namespace osu.Game.Rulesets.Osu.Mods
             Precision = 0.1f,
             MinValue = 0,
             MaxValue = 10,
+            ExtendedMinValue = -5,
             ExtendedMaxValue = 11,
             ReadCurrentFromDifficulty = diff => diff.ApproachRate,
         };

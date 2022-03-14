@@ -16,13 +16,15 @@ namespace osu.Game.Rulesets.Scoring
     public class HitWindows
     {
         private static readonly DifficultyRange[] base_ranges =
-        {
+        {   
+            // max/od10 timing windows funky such that at od 22.6363636363636 precisely all timing windows close to +-0ms
             new DifficultyRange(HitResult.Perfect, 22.4D, 19.4D, 13.9D),
-            new DifficultyRange(HitResult.Great, 64, 49, 34),
-            new DifficultyRange(HitResult.Good, 97, 82, 67),
-            new DifficultyRange(HitResult.Ok, 127, 112, 97),
-            new DifficultyRange(HitResult.Meh, 151, 136, 121),
-            new DifficultyRange(HitResult.Miss, 188, 173, 158),
+            new DifficultyRange(HitResult.Great, 64, 49, 35.108247422680414D), //default is 34
+            new DifficultyRange(HitResult.Good, 97, 82, 58.75257731958763D), // default is 67
+            new DifficultyRange(HitResult.Ok, 127, 112, 80.24742268041237D), // default is 97
+            new DifficultyRange(HitResult.Meh, 151, 136, 97.44329896907217D), // default is 121
+            //except miss, nobody messes with my boi miss
+            new DifficultyRange(HitResult.Miss, 188, 173, 158), // default is 158 (duh)
         };
 
         private double perfect;

@@ -48,7 +48,9 @@ namespace osu.Game.Rulesets.Mods
             Precision = 0.1f,
             MinValue = 0,
             MaxValue = 10,
-            ExtendedMaxValue = 11,
+            ExtendedMinValue = -5,
+            ExtendedMaxValue = 22.18181818181818f, //+-0.5ms Perfect Window
+            // Default Hit Windows Close at 22.636363636363644 OD
             ReadCurrentFromDifficulty = diff => diff.OverallDifficulty,
         };
 
