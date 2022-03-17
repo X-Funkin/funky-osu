@@ -109,10 +109,54 @@ namespace osu.Game.Screens.Select
             {
                 loadedTestBeatmaps = true;
                 Schedule(() => loadBeatmapSets(value));
+                // Schedule(() => loadBeatmapSets(value));
             }
         }
 
+        // lets see if we can just load up each beatmap individually, it should theoretically work, theoretically
         private void loadBeatmapSets(IEnumerable<BeatmapSetInfo> beatmapSets)
+        {
+            // IEnumerable<BeatmapSetInfo> newbeatmapSets = beatmapSets;
+            // newBeatmapSets.
+            // newBeatmapSets.Append
+            // BeatmapSetInfo newbeatmapset = new BeatmapSetInfo;
+
+            //IEnumerable confuses me :(
+            CarouselRoot newRoot = new CarouselRoot(this);
+            foreach (var thisbeatmapset in beatmapSets)
+            {
+                BeatmapSetInfo newbeatmapset = thisbeatmapset;
+                // newbeatmapset.Beatmaps.Clear();
+                // newbeatmapset.Beatmaps.Add(thisbeatmapset.Beatmaps[0]);
+                newRoot.AddChild(createCarouselSet(thisbeatmapset));
+                // foreach (var thisbeatmap in thisbeatmapset.Beatmaps)
+                // {
+                //     newbeatmapset.Beatmaps.Clear();
+                //     newbeatmapset.Beatmaps.Add(thisbeatmap);
+                //     newRoot.AddChild(createCarouselSet(newbeatmapset));
+                // }
+                // newRoot.AddChild(createCarouselSet(newbeatmapset));
+            }
+            // IList<BeatmapSetInfo> beatmapSetList = beatmapSets.ToList
+            
+            // newRoot.AddChildren(beatmapSets.Select(s => createCarouselSet(s.Detach())).Where(g => g != null));
+
+            root = newRoot;
+
+            if (selectedBeatmapSet != null && !beatmapSets.Contains(selectedBeatmapSet.BeatmapSet))
+                selectedBeatmapSet = null;
+
+            Scroll.Clear(false);
+            itemsCache.Invalidate();
+            ScrollToSelected();
+
+            applyActiveCriteria(false);
+
+            if (loadedTestBeatmaps)
+                signalBeatmapsLoaded();
+        }
+
+        private void loadSingleBeatmap(IEnumerable<BeatmapSetInfo> beatmapSets)
         {
             CarouselRoot newRoot = new CarouselRoot(this);
 
@@ -749,6 +793,11 @@ namespace osu.Game.Screens.Select
             return (firstIndex, lastIndex);
         }
 
+        private CarouselBeatmapSet createSingleCarouselSet(BeatmapSetInfo beatmapSet)
+        {
+            var set = new CarouselBeatmapSet(beatmapSet);
+            return set;
+        }
         private CarouselBeatmapSet createCarouselSet(BeatmapSetInfo beatmapSet)
         {
             // This can be moved to the realm query if required using:
