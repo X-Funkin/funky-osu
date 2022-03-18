@@ -123,24 +123,25 @@ namespace osu.Game.Screens.Select
 
             //IEnumerable confuses me :(
             CarouselRoot newRoot = new CarouselRoot(this);
-            foreach (var thisbeatmapset in beatmapSets)
-            {
-                BeatmapSetInfo newbeatmapset = thisbeatmapset;
-                // newbeatmapset.Beatmaps.Clear();
-                // newbeatmapset.Beatmaps.Add(thisbeatmapset.Beatmaps[0]);
-                newRoot.AddChild(createCarouselSet(thisbeatmapset));
-                // foreach (var thisbeatmap in thisbeatmapset.Beatmaps)
-                // {
-                //     newbeatmapset.Beatmaps.Clear();
-                //     newbeatmapset.Beatmaps.Add(thisbeatmap);
-                //     newRoot.AddChild(createCarouselSet(newbeatmapset));
-                // }
-                // newRoot.AddChild(createCarouselSet(newbeatmapset));
-            }
+            // foreach (var thisbeatmapset in beatmapSets)
+            // {
+            //     BeatmapSetInfo newbeatmapset = thisbeatmapset;
+            //     // newbeatmapset.Beatmaps.Clear();
+            //     // newbeatmapset.Beatmaps.Add(thisbeatmapset.Beatmaps[0]);
+            //     newRoot.AddChild(createCarouselSet(thisbeatmapset));
+            //     // foreach (var thisbeatmap in thisbeatmapset.Beatmaps)
+            //     // {
+            //     //     newbeatmapset.Beatmaps.Clear();
+            //     //     newbeatmapset.Beatmaps.Add(thisbeatmap);
+            //     //     newRoot.AddChild(createCarouselSet(newbeatmapset));
+            //     // }
+            //     // newRoot.AddChild(createCarouselSet(newbeatmapset));
+            // }
             // IList<BeatmapSetInfo> beatmapSetList = beatmapSets.ToList
             
             // newRoot.AddChildren(beatmapSets.Select(s => createCarouselSet(s.Detach())).Where(g => g != null));
-
+            // newRoot.AddChildren(beatmapSets.Select(s => createCarouselSet(s.Detach())).Where(g => g != null));
+            // newRoot.AddChild(createCarouselSet(beatmapSets.ElementAt(0)));
             root = newRoot;
 
             if (selectedBeatmapSet != null && !beatmapSets.Contains(selectedBeatmapSet.BeatmapSet))
