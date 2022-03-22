@@ -466,11 +466,25 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                 }
             }
 
+            //add sum funky animations
+
+            // const double bounce_time = 60;
+            // JudgementLine n_line_yeah = new JudgementLine
+            // {
+            //     JudgementLineThickness = { BindTarget = JudgementLineThickness },
+            //     Y = getRelativeJudgementPosition(judgement.TimeOffset),
+            //     Colour = GetColourForHitResult(judgement.Type),
+                
+                
+            // };
+
             judgementsContainer.Add(new JudgementLine
             {
                 JudgementLineThickness = { BindTarget = JudgementLineThickness },
                 Y = getRelativeJudgementPosition(judgement.TimeOffset),
                 Colour = GetColourForHitResult(judgement.Type),
+                
+                
             });
 
             arrow.MoveToY(
@@ -502,19 +516,21 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
             protected override void LoadComplete()
             {
-                const int judgement_fade_in_duration = 100;
+                const int judgement_fade_in_duration = 100*0;
                 const int judgement_fade_out_duration = 5000;
+                const int judgement_bounce_in_duration = 60;
 
                 base.LoadComplete();
 
                 Alpha = 0;
-                Width = 0;
+                Width = 1.75f;
 
                 JudgementLineThickness.BindValueChanged(thickness => Height = thickness.NewValue, true);
 
                 this
                     .FadeTo(0.6f, judgement_fade_in_duration, Easing.OutQuint)
-                    .ResizeWidthTo(1, judgement_fade_in_duration, Easing.OutQuint)
+                    // .ResizeWidthTo(1, judgement_fade_in_duration, Easing.OutQuint)
+                    .ResizeWidthTo(1,judgement_bounce_in_duration,Easing.OutQuint)
                     .Then()
                     .FadeOut(judgement_fade_out_duration)
                     .ResizeWidthTo(0, judgement_fade_out_duration, Easing.InQuint)
