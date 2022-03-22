@@ -41,6 +41,9 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         [SettingSource("Label style", "How to show early/late extremities")]
         public Bindable<LabelStyles> LabelStyle { get; } = new Bindable<LabelStyles>(LabelStyles.Icons);
 
+        [SettingSource("Display Max Judgement", "Maximum Judgement that's displayed on the bar yo")]
+        public Bindable<DisplayMaxJudgements> DisplayMaxJudgement { get; } = new Bindable<DisplayMaxJudgements>(DisplayMaxJudgements.Good);
+
         private SpriteIcon arrow;
         private Drawable labelEarly;
         private Drawable labelLate;
@@ -57,6 +60,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         private Container arrowContainer;
 
         private (HitResult result, double length)[] hitWindows;
+        private (HitResult result, double length)[] displayHitWindows;
 
         private const int max_concurrent_judgements = 50;
 
@@ -157,6 +161,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
             CentreMarkerStyle.BindValueChanged(style => recreateCentreMarker(style.NewValue), true);
             LabelStyle.BindValueChanged(style => recreateLabels(style.NewValue), true);
+            DisplayMaxJudgement.BindValueChanged(style => recreateColourBar(style.NewValue), true);
 
             // delay the appearance animations for only the initial appearance.
             using (arrowContainer.BeginDelayedSequence(450))
@@ -169,6 +174,46 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             }
         }
 
+        private void recreateColourBar(DisplayMaxJudgements maxJudgement)
+        {
+            colourBarsEarly.Clear();
+            colourBarsLate.Clear();
+            displayHitWindows = HitWindows.GetAllAvailableWindows().ToArray();
+            
+            // (HitResult result, double length)[] newfreakingwindows;
+            // // newfreakingwindows = displayHitWindows.Clone();
+            // for(int i=0; i<displayHitWindows.Length;i++)
+            // {
+            //     newfreakingwindows.Append(displayHitWindows[i]);
+            // }
+            // int maxjudgementN = (int)0; //because
+
+            // if(displayHitWindows.First().result.CompareTo(maxJudgement)>0)
+            // {
+
+            // }
+            // float thing = 1;
+
+            // if(Math.Sin(thing)<3)
+            // {
+            //     // Array.Resize(ref displayHitWindows,displayHitWindows.Length);
+            //     Array.Resize(ref displayHitWindows, 4);
+            // }
+            // else
+            // {
+            //     Array.Resize(ref displayHitWindows,-displayHitWindows.First().result.CompareTo(maxJudgement));
+            // }
+
+            // Array.Resize(ref displayHitWindows, Math.Clamp(-displayHitWindows.First().result.CompareTo(maxJudgement),1,displayHitWindows.Length));
+            //do the stuff things
+            displayHitWindows=displayHitWindows.Reverse().ToArray();
+            Array.Resize(ref displayHitWindows, Math.Min((int)maxJudgement+1,displayHitWindows.Length));
+            displayHitWindows=displayHitWindows.Reverse().ToArray();
+            // displayHitWindows.Skip(2);
+            // displayHitWindows.Reverse();
+            createColourBars(displayHitWindows);
+            return;
+        }
         private void recreateCentreMarker(CentreMarkerStyles style)
         {
             if (centreMarkerDrawables != null)
@@ -342,6 +387,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
         private void createColourBars((HitResult result, double length)[] windows)
         {
+            // if(windows.First().result>0)
             // max to avoid div-by-zero.
             maxHitWindow = Math.Max(1, windows.First().length);
 
@@ -490,6 +536,15 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             None,
             Icons,
             Text
+        }
+
+        public enum DisplayMaxJudgements
+        {
+            Perfect,
+            Great,
+            Good,
+            Ok,
+            Meh
         }
     }
 }
