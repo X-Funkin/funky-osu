@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Mods
             MinValue = 0,
             MaxValue = 10,
             ExtendedMinValue = -5,
-            ExtendedMaxValue = 20,
+            ExtendedMaxValue = 30,
             ReadCurrentFromDifficulty = diff => diff.DrainRate,
         };
 
