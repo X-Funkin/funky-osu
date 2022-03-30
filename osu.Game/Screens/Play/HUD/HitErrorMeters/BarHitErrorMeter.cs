@@ -518,12 +518,12 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             {
                 const int judgement_fade_in_duration = 100*0;
                 const int judgement_fade_out_duration = 5000;
-                const int judgement_bounce_in_duration = 60;
+                const int judgement_bounce_in_duration = 100;
 
                 base.LoadComplete();
 
                 Alpha = 0;
-                Width = 1.75f;
+                Width = 2.0f;
 
                 JudgementLineThickness.BindValueChanged(thickness => Height = thickness.NewValue, true);
 

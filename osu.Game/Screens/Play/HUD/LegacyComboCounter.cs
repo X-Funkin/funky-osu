@@ -21,7 +21,7 @@ namespace osu.Game.Screens.Play.HUD
 
         private uint scheduledPopOutCurrentId;
 
-        private const double pop_out_duration = 150;
+        private const double pop_out_duration = 150; //150
 
         private const double fade_out_duration = 100;
 
@@ -80,8 +80,8 @@ namespace osu.Game.Screens.Play.HUD
                             Alpha = 0,
                             Margin = new MarginPadding(0.05f),
                             Blending = BlendingParameters.Additive,
-                            Anchor = Anchor.BottomLeft,
-                            Origin = Anchor.BottomLeft,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
                             BypassAutoSizeAxes = Axes.Both,
                         },
                         displayedCountSpriteText = new LegacySpriteText(LegacyFont.Combo)
@@ -146,10 +146,10 @@ namespace osu.Game.Screens.Play.HUD
             {
                 FinishTransforms(false, nameof(DisplayedCount));
                 isRolling = false;
-                DisplayedCount = prev;
+                DisplayedCount = Current.Value;
 
                 if (prev + 1 == Current.Value)
-                    onCountIncrement(prev, Current.Value);
+                    onCountIncrement(Current.Value, Current.Value);
                 else
                     onCountChange(Current.Value);
             }
@@ -193,16 +193,16 @@ namespace osu.Game.Screens.Play.HUD
             if (id != scheduledPopOutCurrentId)
                 return;
 
-            DisplayedCount++;
+            // DisplayedCount++;
         }
 
         private void onCountIncrement(int currentValue, int newValue)
         {
             scheduledPopOutCurrentId++;
 
-            if (DisplayedCount < currentValue)
-                DisplayedCount++;
-
+            // if (DisplayedCount < currentValue)
+            //     DisplayedCount++;
+            DisplayedCount = newValue;
             displayedCountSpriteText.Show();
 
             transformPopOut(newValue);

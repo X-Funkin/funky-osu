@@ -17,7 +17,7 @@ namespace osu.Game.Screens.Play
     public class KeyCounterDisplay : Container<KeyCounter>
     {
         private const int duration = 100;
-        private const double key_fade_time = 80;
+        private const double key_fade_time = 30;
 
         private readonly Bindable<bool> configVisibility = new Bindable<bool>();
 
