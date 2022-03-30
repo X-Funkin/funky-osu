@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Beatmaps.Timing;
+using osu.Game.Configuration;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Rulesets.Objects;
@@ -24,6 +25,13 @@ namespace osu.Game.Rulesets.Mods
         public override string Acronym => "NC";
         public override IconUsage? Icon => OsuIcon.ModNightcore;
         public override string Description => "Uguuuuuuuu...";
+
+        [SettingSource("Do the pitch heck yeah!", "change pitch to actual speed")]
+        public BindableBool PitchChange { get; } = new BindableBool
+        {
+            Value = false,
+            Default = false,
+        };
     }
 
     public abstract class ModNightcore<TObject> : ModNightcore, IApplicableToDrawableRuleset<TObject>
@@ -36,8 +44,12 @@ namespace osu.Game.Rulesets.Mods
         {
             SpeedChange.BindValueChanged(val =>
             {
-                freqAdjust.Value = SpeedChange.Default;
+                freqAdjust.Value = PitchChange.Value? val.NewValue : SpeedChange.Default;
                 tempoAdjust.Value = val.NewValue / SpeedChange.Default;
+            }, true);
+            PitchChange.BindValueChanged(val =>
+            {
+                freqAdjust.Value =  PitchChange.Value? SpeedChange.Value : SpeedChange.Default;
             }, true);
         }
 

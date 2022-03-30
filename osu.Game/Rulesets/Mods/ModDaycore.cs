@@ -4,6 +4,7 @@
 using osu.Framework.Audio;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
+using osu.Game.Configuration;
 using osu.Framework.Graphics.Sprites;
 
 namespace osu.Game.Rulesets.Mods
@@ -15,6 +16,13 @@ namespace osu.Game.Rulesets.Mods
         public override IconUsage? Icon => null;
         public override string Description => "Whoaaaaa...";
 
+        [SettingSource("Do the pitch heck yeah!", "change pitch to actual speed")]
+        public BindableBool PitchChange { get; } = new BindableBool
+        {
+            Value = false,
+            Default = false,
+        };
+
         private readonly BindableNumber<double> tempoAdjust = new BindableDouble(1);
         private readonly BindableNumber<double> freqAdjust = new BindableDouble(1);
 
@@ -22,8 +30,12 @@ namespace osu.Game.Rulesets.Mods
         {
             SpeedChange.BindValueChanged(val =>
             {
-                freqAdjust.Value = SpeedChange.Default;
+                freqAdjust.Value = PitchChange.Value? val.NewValue : SpeedChange.Default;
                 tempoAdjust.Value = val.NewValue / SpeedChange.Default;
+            }, true);
+            PitchChange.BindValueChanged(val =>
+            {
+                freqAdjust.Value =  PitchChange.Value? SpeedChange.Value : SpeedChange.Default;
             }, true);
         }
 
