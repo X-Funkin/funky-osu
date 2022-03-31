@@ -162,6 +162,8 @@ namespace osu.Game.Screens.Select
             private FillFlowContainer infoLabelContainer;
             private Container bpmLabelContainer;
 
+            private Container lengthLabelContainer;
+
             private readonly WorkingBeatmap working;
             private readonly RulesetInfo ruleset;
 
@@ -346,8 +348,11 @@ namespace osu.Game.Screens.Select
 
                     refreshBPMLabel();
 
+                    refreshLengthLabel();
+
                     settingChangeTracker = new ModSettingChangeTracker(m.NewValue);
                     settingChangeTracker.SettingChanged += _ => refreshBPMLabel();
+                    settingChangeTracker.SettingChanged += _ => refreshLengthLabel();
                 }, true);
             }
 
@@ -358,12 +363,10 @@ namespace osu.Game.Screens.Select
 
                 infoLabelContainer.Children = new Drawable[]
                 {
-                    new InfoLabel(new BeatmapStatistic
+                    lengthLabelContainer = new Container
                     {
-                        Name = "Length",
-                        CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Length),
-                        Content = working.BeatmapInfo.Length.ToFormattedDuration().ToString(),
-                    }),
+                        AutoSizeAxes = Axes.Both,
+                    },
                     bpmLabelContainer = new Container
                     {
                         AutoSizeAxes = Axes.Both,
@@ -430,6 +433,26 @@ namespace osu.Game.Screens.Select
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Bpm),
                     Content = labelText
                 });
+            }
+
+            private void refreshLengthLabel()
+            {
+                var beatmap = working.Beatmap;
+
+                if (beatmap == null || bpmLabelContainer == null)
+                    return;
+
+                // this doesn't consider mods which apply variable rates, yet.
+                double rate = 1;
+                foreach (var mod in mods.Value.OfType<IApplicableToRate>())
+                    rate = mod.ApplyToRate(0, rate);
+                string labelText = (working.BeatmapInfo.Length/rate).ToFormattedDuration().ToString();
+                lengthLabelContainer.Child = new InfoLabel(new BeatmapStatistic
+                    {
+                        Name = "Length",
+                        CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Length),
+                        Content = labelText,
+                    });
             }
 
             private Drawable getMapper(BeatmapMetadata metadata)
