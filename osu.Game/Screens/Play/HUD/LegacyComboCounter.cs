@@ -62,8 +62,8 @@ namespace osu.Game.Screens.Play.HUD
         {
             AutoSizeAxes = Axes.Both;
 
-            Anchor = Anchor.BottomLeft;
-            Origin = Anchor.BottomLeft;
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
 
             Margin = new MarginPadding(10);
 
@@ -80,14 +80,16 @@ namespace osu.Game.Screens.Play.HUD
                         {
                             Alpha = 0,
                             Blending = BlendingParameters.Additive,
-                            Anchor = Anchor.BottomLeft,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
                             BypassAutoSizeAxes = Axes.Both,
                         },
                         displayedCountSpriteText = new LegacySpriteText(LegacyFont.Combo)
                         {
                             Alpha = 0,
                             AlwaysPresent = true,
-                            Anchor = Anchor.BottomLeft,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
                             BypassAutoSizeAxes = Axes.Both,
                         },
                     }
@@ -137,14 +139,14 @@ namespace osu.Game.Screens.Play.HUD
 
         private void updateLayout()
         {
-            const float font_height_ratio = 0.625f;
-            const float vertical_offset = 9;
+            // const float font_height_ratio = 0.625f;
+            // const float vertical_offset = 9;
 
-            displayedCountSpriteText.OriginPosition = new Vector2(0, font_height_ratio * displayedCountSpriteText.Height + vertical_offset);
-            displayedCountSpriteText.Position = new Vector2(0, -(1 - font_height_ratio) * displayedCountSpriteText.Height + vertical_offset);
+            // displayedCountSpriteText.OriginPosition = new Vector2(0, font_height_ratio * displayedCountSpriteText.Height + vertical_offset);
+            // displayedCountSpriteText.Position = new Vector2(0, -(1 - font_height_ratio) * displayedCountSpriteText.Height + vertical_offset);
 
-            popOutCount.OriginPosition = new Vector2(3, font_height_ratio * popOutCount.Height + vertical_offset); // In stable, the bigger pop out scales a bit to the left
-            popOutCount.Position = new Vector2(0, -(1 - font_height_ratio) * popOutCount.Height + vertical_offset);
+            // popOutCount.OriginPosition = new Vector2(3, font_height_ratio * popOutCount.Height + vertical_offset); // In stable, the bigger pop out scales a bit to the left // man screw stable, poping out a bit to the left only makes sense when the combo is in the bottom left // my bad dog i thought you mean poping out to the right
+            // popOutCount.Position = new Vector2(0, -(1 - font_height_ratio) * popOutCount.Height + vertical_offset);
 
             counterContainer.Size = displayedCountSpriteText.Size;
         }
