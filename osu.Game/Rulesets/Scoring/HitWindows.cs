@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Scoring
             new DifficultyRange(HitResult.Ok, 127, 112, 80.24742268041237D), // default is 97
             new DifficultyRange(HitResult.Meh, 151, 136, 97.44329896907217D), // default is 121
             //except miss, nobody messes with my boi miss
-            new DifficultyRange(HitResult.Miss, 188, 173, 158), // default is 158 (duh)
+            new DifficultyRange(HitResult.Miss, 188, 173, 158), // default is 158 (duh) // 10 minute hit window = basic anti-mash // nah
         };
 
         private double perfect;

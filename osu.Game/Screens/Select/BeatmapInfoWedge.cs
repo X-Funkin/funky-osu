@@ -175,7 +175,6 @@ namespace osu.Game.Screens.Select
 
             [Resolved]
             private OsuColour colours { get; set; }
-
             private ModSettingChangeTracker settingChangeTracker;
 
             public WedgeInfoText(WorkingBeatmap working, RulesetInfo userRuleset)

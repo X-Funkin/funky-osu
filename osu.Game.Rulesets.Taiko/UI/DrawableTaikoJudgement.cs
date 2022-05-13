@@ -18,13 +18,14 @@ namespace osu.Game.Rulesets.Taiko.UI
             base.ApplyHitAnimations();
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result) => new TaikoJudgementPiece(result);
+        protected override Drawable CreateDefaultJudgement(HitResult result, double timeoffset) => new TaikoJudgementPiece(result, 0);
 
         private class TaikoJudgementPiece : DefaultJudgementPiece
         {
-            public TaikoJudgementPiece(HitResult result)
+            public TaikoJudgementPiece(HitResult result, double timeoffset)
                 : base(result)
             {
+                TimeOffset = timeoffset;
             }
 
             public override void PlayAnimation()

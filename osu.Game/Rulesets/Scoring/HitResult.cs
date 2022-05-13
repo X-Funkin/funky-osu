@@ -117,6 +117,21 @@ namespace osu.Game.Rulesets.Scoring
         [EnumMember(Value = "ignore_hit")]
         [Order(12)]
         IgnoreHit,
+
+        // // <summary>
+        // // Indicates a hit that is early.
+        // // </summary>
+        // [EnumMember(Value = "early")]
+        // [Order(15)]
+        // Early,
+
+        // // <summary>
+        // // Indicates a hit that is late.
+        // // </summary>
+        // [EnumMember(Value = "late")]
+        // [Order(16)]
+        // Late,
+        // wait a sec i dont' think i understand what's going on
     }
 
     public static class HitResultExtensions
@@ -248,5 +263,13 @@ namespace osu.Game.Rulesets.Scoring
             Debug.Assert(minResult <= maxResult);
             return result > minResult && result < maxResult;
         }
+
+        // public static bool IsEarly(this HitResult result){
+        //     return (result == HitResult.Early);
+        // }
+
+        // public static bool IsLate(this HitResult result){
+        //     return (result == HitResult.Late);
+        // }
     }
 }

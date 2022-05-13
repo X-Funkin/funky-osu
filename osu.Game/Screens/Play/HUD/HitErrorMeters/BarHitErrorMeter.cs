@@ -42,7 +42,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         public Bindable<LabelStyles> LabelStyle { get; } = new Bindable<LabelStyles>(LabelStyles.Icons);
 
         [SettingSource("Display Max Judgement", "Maximum Judgement that's displayed on the bar yo")]
-        public Bindable<DisplayMaxJudgements> DisplayMaxJudgement { get; } = new Bindable<DisplayMaxJudgements>(DisplayMaxJudgements.Good);
+        public Bindable<DisplayMaxJudgements> DisplayMaxJudgement { get; } = new Bindable<DisplayMaxJudgements>(DisplayMaxJudgements.Meh);
 
         private SpriteIcon arrow;
         private Drawable labelEarly;
@@ -54,6 +54,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         private Container judgementsContainer;
 
         private double maxHitWindow;
+        // private double maxDisplayHitWindow;
 
         private double floatingAverage;
         private Container colourBars;
@@ -209,9 +210,13 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
             displayHitWindows=displayHitWindows.Reverse().ToArray();
             Array.Resize(ref displayHitWindows, Math.Min((int)maxJudgement+1,displayHitWindows.Length));
             displayHitWindows=displayHitWindows.Reverse().ToArray();
+            
             // displayHitWindows.Skip(2);
             // displayHitWindows.Reverse();
             createColourBars(displayHitWindows);
+            if (LabelStyle.Value == LabelStyles.HitWindow){
+                recreateLabels(LabelStyle.Value);
+            }
             return;
         }
         private void recreateCentreMarker(CentreMarkerStyles style)
@@ -358,6 +363,29 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                     };
 
                     break;
+                case LabelStyles.HitWindow:
+                    labelEarly = new OsuSpriteText
+                    {
+                        Y = -10,
+                        Text = $@"-{maxHitWindow:N2}ms",
+                        Font = OsuFont.Default.With(size: 10),
+                        Height = 12,
+                        Anchor = Anchor.TopCentre,
+                        Origin = Anchor.Centre,
+                    };
+
+                    labelLate = new OsuSpriteText
+                    {
+                        Y = 10,
+                        Text = $@"{maxHitWindow:N2}ms",
+                        Font = OsuFont.Default.With(size: 10),
+                        Height = 12,
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.Centre,
+                    };
+
+                    break;
+
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(style), style, null);
@@ -551,7 +579,8 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         {
             None,
             Icons,
-            Text
+            Text,
+            HitWindow,
         }
 
         public enum DisplayMaxJudgements

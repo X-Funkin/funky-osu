@@ -17,14 +17,17 @@ namespace osu.Game.Rulesets.Judgements
     {
         protected readonly HitResult Result;
 
+        protected double TimeOffset;
+
         protected SpriteText JudgementText { get; private set; }
 
         [Resolved]
         private OsuColour colours { get; set; }
 
-        public DefaultJudgementPiece(HitResult result)
+        public DefaultJudgementPiece(HitResult result, double timeoffset = 0)
         {
             Result = result;
+            TimeOffset = timeoffset;
             Origin = Anchor.Centre;
         }
 

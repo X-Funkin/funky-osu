@@ -24,6 +24,8 @@ namespace osu.Game.Rulesets.Judgements
 
         public JudgementResult Result { get; private set; }
 
+        public double TimeOffset { get; private set; }
+
         public DrawableHitObject JudgedObject { get; private set; }
 
         public override bool RemoveCompletedTransforms => false;
@@ -98,6 +100,7 @@ namespace osu.Game.Rulesets.Judgements
         public void Apply([NotNull] JudgementResult result, [CanBeNull] DrawableHitObject judgedObject)
         {
             Result = result;
+            TimeOffset = result.TimeOffset;
             JudgedObject = judgedObject;
         }
 
@@ -156,7 +159,9 @@ namespace osu.Game.Rulesets.Judgements
         private void prepareDrawables()
         {
             var type = Result?.Type ?? HitResult.Perfect; //TODO: better default type from ruleset
-
+            var timeoffset = Result?.TimeOffset ?? 0; //ugh //wtfrick why does ^^^^ note crash but mine does??? // oooh the ?? is a null handler my bad
+            // var timeoffset = 1245;
+            // TimeOffset = Result.TimeOffset;
             // todo: this should be removed once judgements are always pooled.
             if (type == currentDrawableType)
                 return;
@@ -166,7 +171,7 @@ namespace osu.Game.Rulesets.Judgements
                 RemoveInternal(JudgementBody);
 
             AddInternal(JudgementBody = new SkinnableDrawable(new GameplaySkinComponent<HitResult>(type), _ =>
-                CreateDefaultJudgement(type), confineMode: ConfineMode.NoScaling)
+                CreateDefaultJudgement(type,(double) timeoffset), confineMode: ConfineMode.NoScaling)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -197,6 +202,6 @@ namespace osu.Game.Rulesets.Judgements
             }
         }
 
-        protected virtual Drawable CreateDefaultJudgement(HitResult result) => new DefaultJudgementPiece(result);
+        protected virtual Drawable CreateDefaultJudgement(HitResult result, double timeoffset) => new DefaultJudgementPiece(result, 1245);
     }
 }

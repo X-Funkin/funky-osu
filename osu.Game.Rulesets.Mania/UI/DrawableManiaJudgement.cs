@@ -14,18 +14,35 @@ namespace osu.Game.Rulesets.Mania.UI
             : base(result, judgedObject)
         {
         }
-
+        public static double testn = 0;
+        public double test_n = 0;
         public DrawableManiaJudgement()
         {
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result) => new DefaultManiaJudgementPiece(result);
+        public double test(){
+            return 0;
+        }
+
+        protected override Drawable CreateDefaultJudgement(HitResult result, double timeoffset) => new DefaultManiaJudgementPiece(result, timeoffset);
 
         private class DefaultManiaJudgementPiece : DefaultJudgementPiece
         {
-            public DefaultManiaJudgementPiece(HitResult result)
+            public DefaultManiaJudgementPiece(HitResult result, double timeoffset)
                 : base(result)
             {
+                // string new_text = $@"{JudgementText.Text}";
+                // if (timeoffset<0){
+                //     new_text = "<"+new_text;
+                // }
+                // else if (timeoffset>0){
+                //     new_text = new_text+">";
+                // }
+                
+                // JudgementText.Text = "Bazinga";
+                // set_the_test();
+                // TimeOffset = timeoffset;
+                TimeOffset = timeoffset;
             }
 
             protected override void LoadComplete()
@@ -33,7 +50,21 @@ namespace osu.Game.Rulesets.Mania.UI
                 base.LoadComplete();
 
                 JudgementText.Font = JudgementText.Font.With(size: 25);
+                // JudgementText.Text = JudgementText.Text + " Bazinga " + TimeOffset;
+                string new_text = $@"{JudgementText.Text}";
+                if (TimeOffset<0){
+                    new_text = "<<<"+new_text;
+                }
+                else if (TimeOffset>0){
+                    new_text = new_text+">>>";
+                }
+                
+                JudgementText.Text = new_text;
             }
+
+            // protected void set_the_test(){
+            //     JudgementText.Text = "Bazinga";
+            // }
 
             public override void PlayAnimation()
             {
