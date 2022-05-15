@@ -34,6 +34,28 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                 { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50 },
                 { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0 }
             };
+        // soon
+        // private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> early_hit_result_mapping
+        //     = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
+        //     {
+        //         { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300gEarly },
+        //         { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300Early },
+        //         { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200Early },
+        //         { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100Early },
+        //         { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50Early },
+        //         { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0Early }
+        //     };
+
+        // private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> late_hit_result_mapping
+        //     = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
+        //     {
+        //         { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300gLate },
+        //         { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300Late },
+        //         { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200Late },
+        //         { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100Late },
+        //         { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50Late },
+        //         { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0Late }
+            // };
 
         /// <summary>
         /// Mapping of <see cref="HitResult"/> to their corresponding

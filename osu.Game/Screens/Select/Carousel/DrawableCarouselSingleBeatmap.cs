@@ -28,11 +28,9 @@ using osu.Game.Resources.Localisation.Web;
 using osuTK;
 using osuTK.Graphics;
 
-using osu.Framework.Logging;
-
 namespace osu.Game.Screens.Select.Carousel
 {
-    public class DrawableCarouselBeatmap : DrawableCarouselItem, IHasContextMenu
+    public class DrawableCarouselSingleBeatmap : DrawableCarouselItem, IHasContextMenu
     {
         public const float CAROUSEL_BEATMAP_SPACING = 5;
 
@@ -69,9 +67,8 @@ namespace osu.Game.Screens.Select.Carousel
         private IBindable<StarDifficulty?> starDifficultyBindable;
         private CancellationTokenSource starDifficultyCancellationSource;
 
-        public DrawableCarouselBeatmap(CarouselBeatmap panel)
-        {   
-            Logger.Log(@$">>lmaoooooo yeah {panel}");
+        public DrawableCarouselSingleBeatmap(CarouselSingleBeatmap panel)
+        {
             beatmapInfo = panel.BeatmapInfo;
             Item = panel;
         }

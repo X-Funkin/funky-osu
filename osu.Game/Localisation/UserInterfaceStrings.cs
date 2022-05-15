@@ -92,6 +92,11 @@ namespace osu.Game.Localisation
         /// <summary>
         /// "Display beatmaps from"
         /// </summary>
+        public static LocalisableString CoolSorting => new TranslatableString(getKey(@"use_cool_sorting"), @"Use The Cooler Sorting");
+
+        /// <summary>
+        /// "Display beatmaps from"
+        /// </summary>
         public static LocalisableString StarsMinimum => new TranslatableString(getKey(@"stars_minimum"), @"Display beatmaps from");
 
         /// <summary>

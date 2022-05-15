@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
@@ -18,6 +19,7 @@ using osu.Framework.Input.Events;
 using osu.Framework.Layout;
 using osu.Framework.Threading;
 using osu.Framework.Utils;
+using osu.Framework.Logging;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Database;
@@ -102,6 +104,8 @@ namespace osu.Game.Screens.Select
         // todo: only used for testing, maybe remove.
         private bool loadedTestBeatmaps;
 
+        private ArrayList starDifficulties = new ArrayList();
+
         public IEnumerable<BeatmapSetInfo> BeatmapSets
         {
             get => beatmapSets.Select(g => g.BeatmapSet);
@@ -114,9 +118,13 @@ namespace osu.Game.Screens.Select
 
         private void loadBeatmapSets(IEnumerable<BeatmapSetInfo> beatmapSets)
         {
+            Logger.Log(@$"YO MAMA Laodinggg {beatmapSets}");
+            starDifficulties.Clear();
             CarouselRoot newRoot = new CarouselRoot(this);
 
+            // newRoot.AddChildren(beatmapSets.Select(s => createCarouselSet(s.Detach())).Where(g => g != null));
             newRoot.AddChildren(beatmapSets.Select(s => createCarouselSet(s.Detach())).Where(g => g != null));
+            // newRoot.AddChildren(beatmapSets.Select(s => s.Detach().Beatmaps.Select(b => createSingleCarousel(b))).Where(g => g != null));
 
             root = newRoot;
 
@@ -137,6 +145,8 @@ namespace osu.Game.Screens.Select
 
         private readonly Cached itemsCache = new Cached();
         private PendingScrollOperation pendingScrollOperation = PendingScrollOperation.None;
+
+        public Bindable<bool> UseCoolSorting = new Bindable<bool>();
 
         public Bindable<bool> RightClickScrollingEnabled = new Bindable<bool>();
 
@@ -183,7 +193,8 @@ namespace osu.Game.Screens.Select
 
             config.BindWith(OsuSetting.RandomSelectAlgorithm, RandomAlgorithm);
             config.BindWith(OsuSetting.SongSelectRightMouseScroll, RightClickScrollingEnabled);
-
+            //yoyoyo yo mama
+            config.BindWith(OsuSetting.UseCoolSorting, UseCoolSorting);
             RightClickScrollingEnabled.ValueChanged += enabled => Scroll.RightMouseScrollbar = enabled.NewValue;
             RightClickScrollingEnabled.TriggerChange();
 
@@ -341,6 +352,30 @@ namespace osu.Game.Screens.Select
             // ensure that any pending events from BeatmapManager have been run before attempting a selection.
             Scheduler.Update();
 
+            //your mom
+            if (UseCoolSorting.Value){
+
+                int maxdiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating+0.2);
+                int mindiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating-0.2);
+                if (maxdiffindex<0){
+                    maxdiffindex = ~maxdiffindex;
+                }
+                if (mindiffindex<0){
+                    mindiffindex = ~mindiffindex;
+                }
+
+                maxdiffindex = Math.Clamp(maxdiffindex+1,0,starDifficulties.Count);
+                mindiffindex = Math.Clamp(mindiffindex-1,0,starDifficulties.Count);
+                activeCriteria.StarDifficulty.Max = (double) starDifficulties[maxdiffindex];
+                activeCriteria.StarDifficulty.Min = (double) starDifficulties[mindiffindex];
+                activeCriteria.UserStarDifficulty.Max = (double) starDifficulties[maxdiffindex];
+                activeCriteria.UserStarDifficulty.Min = (double) starDifficulties[mindiffindex];
+                
+
+                Logger.Log(@$"New Star Diff is {beatmapInfo.StarRating}, max={(double) starDifficulties[maxdiffindex]}, min={(double) starDifficulties[mindiffindex]}");
+                Logger.Log(@$"But did it work?? {activeCriteria.StarDifficulty.Max}, {activeCriteria.StarDifficulty.Min} and player {activeCriteria.UserStarDifficulty.Max},{activeCriteria.UserStarDifficulty.Min}");
+                applyActiveCriteria(false);
+            }
             if (beatmapInfo?.Hidden != false)
                 return false;
 
@@ -615,7 +650,7 @@ namespace osu.Game.Screens.Select
                     SelectNext(1, e.Action == GlobalAction.SelectNextGroup);
                     return true;
 
-                case GlobalAction.SelectPrevious:
+                case GlobalAction.SelectPrevious: 
                 case GlobalAction.SelectPreviousGroup:
                     SelectNext(-1, e.Action == GlobalAction.SelectPreviousGroup);
                     return true;
@@ -751,7 +786,14 @@ namespace osu.Game.Screens.Select
             };
 
             foreach (var c in set.Beatmaps)
-            {
+            {   
+                // Logger.Log(@$"yeah adding the tghingy{c}");
+                int insertindex = starDifficulties.BinarySearch(c.BeatmapInfo.StarRating);
+                if (insertindex<0){
+                    insertindex = ~insertindex;
+                }
+                starDifficulties.Insert(insertindex,c.BeatmapInfo.StarRating);
+                // Logger.Log(@$"({starDifficulties.Count}) and the star diff {c.BeatmapInfo.StarRating} has been added to index {insertindex}, and now that index is {starDifficulties[insertindex]}");
                 c.State.ValueChanged += state =>
                 {
                     if (state.NewValue == CarouselItemState.Selected)
@@ -761,11 +803,46 @@ namespace osu.Game.Screens.Select
 
                         itemsCache.Invalidate();
                         ScrollToSelected();
+
+                        
                     }
                 };
             }
 
             return set;
+        }
+
+        private CarouselSingleBeatmap createSingleCarousel(BeatmapInfo beatmap)
+        {
+            // This can be moved to the realm query if required using:
+            // .Filter("DeletePending == false && Protected == false && ANY Beatmaps.Hidden == false")
+            //
+            // As long as we are detaching though, it makes more sense to do it here as adding to the realm query has an overhead
+            // as seen at https://github.com/realm/realm-dotnet/discussions/2773#discussioncomment-2004275.
+            if (beatmap.Hidden)
+                return null;
+
+            var single = new CarouselSingleBeatmap(beatmap)
+            {
+                // GetRecommendedBeatmap = beatmaps => GetRecommendedBeatmap?.Invoke(beatmaps)
+            };
+
+            // foreach (var c in set.Beatmaps)
+            // {
+            single.State.ValueChanged += state =>
+            {
+                if (state.NewValue == CarouselItemState.Selected)
+                {
+                    // selectedBeatmapSet = set;
+                    SelectionChanged?.Invoke(single.BeatmapInfo);
+
+                    itemsCache.Invalidate();
+                    ScrollToSelected();
+                }
+            };
+            // }
+
+            return single;
         }
 
         private const float panel_padding = 5;

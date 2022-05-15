@@ -17,6 +17,8 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
         private Bindable<double> minStars;
         private Bindable<double> maxStars;
 
+        private Bindable<bool> useCoolSorting;
+
         protected override LocalisableString Header => UserInterfaceStrings.SongSelectHeader;
 
         [BackgroundDependencyLoader]
@@ -24,6 +26,7 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
         {
             minStars = config.GetBindable<double>(OsuSetting.DisplayStarsMinimum);
             maxStars = config.GetBindable<double>(OsuSetting.DisplayStarsMaximum);
+            useCoolSorting = config.GetBindable<bool>(OsuSetting.UseCoolSorting);
 
             minStars.ValueChanged += min => maxStars.Value = Math.Max(min.NewValue, maxStars.Value);
             maxStars.ValueChanged += max => minStars.Value = Math.Min(max.NewValue, minStars.Value);
@@ -40,6 +43,11 @@ namespace osu.Game.Overlays.Settings.Sections.UserInterface
                 {
                     LabelText = UserInterfaceStrings.ShowConvertedBeatmaps,
                     Current = config.GetBindable<bool>(OsuSetting.ShowConvertedBeatmaps),
+                },
+                new SettingsCheckbox
+                {
+                    LabelText = UserInterfaceStrings.CoolSorting,
+                    Current = config.GetBindable<bool>(OsuSetting.UseCoolSorting),
                 },
                 new SettingsSlider<double, StarsSlider>
                 {

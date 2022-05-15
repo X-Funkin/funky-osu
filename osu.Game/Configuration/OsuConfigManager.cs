@@ -36,6 +36,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.BeatmapDetailModsFilter, false);
 
             SetDefault(OsuSetting.ShowConvertedBeatmaps, true);
+            SetDefault(OsuSetting.UseCoolSorting, false);
             SetDefault(OsuSetting.DisplayStarsMinimum, 0.0, 0, 10, 0.1);
             SetDefault(OsuSetting.DisplayStarsMaximum, 10.1, 0, 10.1, 0.1);
 
@@ -302,6 +303,8 @@ namespace osu.Game.Configuration
         ReleaseStream,
         SavePassword,
         SaveUsername,
+
+        UseCoolSorting,
         DisplayStarsMinimum,
         DisplayStarsMaximum,
         SongSelectGroupingMode,
