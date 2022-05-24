@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Allocation;
-using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -14,6 +13,7 @@ using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Online.Chat;
+using osu.Game.Overlays.Chat.Listing;
 
 namespace osu.Game.Overlays.Chat.ChannelList
 {
@@ -22,12 +22,13 @@ namespace osu.Game.Overlays.Chat.ChannelList
         public Action<Channel>? OnRequestSelect;
         public Action<Channel>? OnRequestLeave;
 
-        public readonly BindableBool SelectorActive = new BindableBool();
+        public readonly ChannelListing.ChannelListingChannel ChannelListingChannel = new ChannelListing.ChannelListingChannel();
 
         private readonly Dictionary<Channel, ChannelListItem> channelMap = new Dictionary<Channel, ChannelListItem>();
 
         private ChannelListItemFlow publicChannelFlow = null!;
         private ChannelListItemFlow privateChannelFlow = null!;
+        private ChannelListItem selector = null!;
 
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider colourProvider)
@@ -53,16 +54,17 @@ namespace osu.Game.Overlays.Chat.ChannelList
                         Children = new Drawable[]
                         {
                             publicChannelFlow = new ChannelListItemFlow("CHANNELS"),
-                            new ChannelListSelector
+                            selector = new ChannelListItem(ChannelListingChannel)
                             {
                                 Margin = new MarginPadding { Bottom = 10 },
-                                SelectorActive = { BindTarget = SelectorActive },
                             },
                             privateChannelFlow = new ChannelListItemFlow("DIRECT MESSAGES"),
                         },
                     },
                 },
             };
+
+            selector.OnRequestSelect += chan => OnRequestSelect?.Invoke(chan);
         }
 
         public void AddChannel(Channel channel)
@@ -73,7 +75,6 @@ namespace osu.Game.Overlays.Chat.ChannelList
             ChannelListItem item = new ChannelListItem(channel);
             item.OnRequestSelect += chan => OnRequestSelect?.Invoke(chan);
             item.OnRequestLeave += chan => OnRequestLeave?.Invoke(chan);
-            item.SelectorActive.BindTarget = SelectorActive;
 
             ChannelListItemFlow flow = getFlowForChannel(channel);
             channelMap.Add(channel, item);

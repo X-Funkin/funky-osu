@@ -270,12 +270,9 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         protected override bool OnMouseDown(MouseDownEvent e)
         {
             if (base.OnMouseDown(e))
-            {
                 beginUserDrag();
-                return true;
-            }
 
-            return false;
+            return true;
         }
 
         protected override void OnMouseUp(MouseUpEvent e)
@@ -306,10 +303,7 @@ namespace osu.Game.Screens.Edit.Compose.Components.Timeline
         /// </summary>
         public double VisibleRange => track.Length / Zoom;
 
-        public SnapResult FindSnappedPosition(Vector2 screenSpacePosition) =>
-            new SnapResult(screenSpacePosition, null);
-
-        public SnapResult FindSnappedPositionAndTime(Vector2 screenSpacePosition) =>
+        public SnapResult FindSnappedPositionAndTime(Vector2 screenSpacePosition, SnapType snapType = SnapType.All) =>
             new SnapResult(screenSpacePosition, beatSnapProvider.SnapTime(getTimeFromPosition(Content.ToLocalSpace(screenSpacePosition))));
 
         private double getTimeFromPosition(Vector2 localPosition) =>
