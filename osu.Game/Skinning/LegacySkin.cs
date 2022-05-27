@@ -21,6 +21,7 @@ using osu.Game.Database;
 using osu.Game.IO;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Screens.Play;
 using osu.Game.Screens.Play.HUD;
 using osu.Game.Screens.Play.HUD.HitErrorMeters;
@@ -391,6 +392,24 @@ namespace osu.Game.Skinning
                     }
 
                     return null;
+
+                case GameplaySkinComponent<JudgementResult> resultComponent:
+                    //lmaooo just a copy of the top because i don't want to worry about standard early/late judgements
+                    Func<Drawable?> ncreateDrawable = () => getJudgementAnimation(resultComponent.Component.Type);
+
+                    // kind of wasteful that we throw this away, but should do for now.
+                    if (ncreateDrawable() != null)
+                    {
+                        var particle = getParticleTexture(resultComponent.Component.Type);
+
+                        if (particle != null)
+                            return new LegacyJudgementPieceNew(resultComponent.Component.Type, ncreateDrawable, particle);
+                        else
+                            return new LegacyJudgementPieceOld(resultComponent.Component.Type, ncreateDrawable);
+                    }
+
+                    return null;
+
 
                 case SkinnableSprite.SpriteComponent sprite:
                     return this.GetAnimation(sprite.LookupName, false, false);
