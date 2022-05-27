@@ -134,7 +134,7 @@ namespace osu.Game.Screens.Play
         {
             if (show)
             {
-                double remainingFadeTime = FadeTime * (1 - glowSprite.Alpha);
+                double remainingFadeTime = 0*FadeTime * (1 - glowSprite.Alpha);
                 glowSprite.FadeIn(remainingFadeTime, Easing.OutQuint);
                 textLayer.FadeColour(KeyDownTextColor, remainingFadeTime, Easing.OutQuint);
             }
