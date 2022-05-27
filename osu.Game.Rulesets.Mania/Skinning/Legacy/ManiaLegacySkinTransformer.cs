@@ -193,33 +193,33 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             var this_hit_result_mapping = hit_result_mapping;
             HitResult result = judgement_result.Type;
             var hit_list = default_hit_result_skin_filenames;
-            bool early_or_late = false;
+            // bool early_or_late = false;
             if (judgement_result.TimeOffset<0){
                 this_hit_result_mapping = early_hit_result_mapping;
                 hit_list = default_early_hit_result_skin_filenames;
-                early_or_late = true;
+                // early_or_late = true;
             }
             if (judgement_result.TimeOffset>0){
                 this_hit_result_mapping = late_hit_result_mapping;
                 hit_list = default_late_hit_result_skin_filenames;
-                early_or_late = true;
+                // early_or_late = true;
             }
             if (!this_hit_result_mapping.ContainsKey(result)) 
                 return null;
-            Logger.Log("okay, let's see what's going on");
-            Logger.Log(@$"{result}");
-            Logger.Log(@$"{this_hit_result_mapping[result]}");
-            Logger.Log(@$"{this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value}");
-            Logger.Log(@$"{default_hit_result_skin_filenames[result]}");
+            // Logger.Log("okay, let's see what's going on");
+            // Logger.Log(@$"{result}");
+            // Logger.Log(@$"{this_hit_result_mapping[result]}");
+            // Logger.Log(@$"{this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value}");
+            // Logger.Log(@$"{default_hit_result_skin_filenames[result]}");
             string filename = this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value
                               ?? hit_list[result];
-            Logger.Log(@$"uh yeah we heard a dying [{filename}] on the premises");
+            // Logger.Log(@$"uh yeah we heard a dying [{filename}] on the premises");
             var animation = this.GetAnimation(filename, true, true);
-            Logger.Log(@$"yeah that anim is {animation} ({animation == null})");
-            if (early_or_late){
-                Logger.Log("early_or_late");
-            }
-            if (animation == null && early_or_late){
+            // Logger.Log(@$"yeah that anim is {animation} ({animation == null})");
+            // if (early_or_late){
+            //     Logger.Log("early_or_late");
+            // }
+            if (animation == null){
                 filename = this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value
                               ?? default_hit_result_skin_filenames[result];
                 animation = this.GetAnimation(filename, true, true);
