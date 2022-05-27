@@ -18,6 +18,8 @@ using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 
+using osu.Framework.Logging;
+
 namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 {
     public class BarHitErrorMeter : HitErrorMeter
@@ -207,8 +209,11 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
             // Array.Resize(ref displayHitWindows, Math.Clamp(-displayHitWindows.First().result.CompareTo(maxJudgement),1,displayHitWindows.Length));
             //do the stuff things
+            HitResult defaultMinimumHitWindow = displayHitWindows.Last().result;
+            Logger.Log(@$"The timeing windows are as follows: {displayHitWindows.ToArray().Length}");
+            Logger.Log(@$"Max Display: {maxJudgement}({(int)maxJudgement}), Default Minimum: {defaultMinimumHitWindow}({(int)HitResult.Perfect-(int)defaultMinimumHitWindow})");
             displayHitWindows=displayHitWindows.Reverse().ToArray();
-            Array.Resize(ref displayHitWindows, Math.Min((int)maxJudgement+1,displayHitWindows.Length));
+            Array.Resize(ref displayHitWindows, Math.Min(Math.Max((int)maxJudgement-((int)HitResult.Perfect-(int)defaultMinimumHitWindow),0)+1,displayHitWindows.Length));
             displayHitWindows=displayHitWindows.Reverse().ToArray();
             
             // displayHitWindows.Skip(2);

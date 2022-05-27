@@ -11,6 +11,8 @@ using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Scoring;
 using osuTK;
 
+using osu.Framework.Logging;
+
 namespace osu.Game.Rulesets.Judgements
 {
     public class DefaultJudgementPiece : CompositeDrawable, IAnimatableJudgement
@@ -24,10 +26,10 @@ namespace osu.Game.Rulesets.Judgements
         [Resolved]
         private OsuColour colours { get; set; }
 
-        public DefaultJudgementPiece(HitResult result, double timeoffset = 0)
+        public DefaultJudgementPiece(JudgementResult result)
         {
-            Result = result;
-            TimeOffset = timeoffset;
+            Result = result.Type;
+            TimeOffset = result.TimeOffset;
             Origin = Anchor.Centre;
         }
 
@@ -35,6 +37,8 @@ namespace osu.Game.Rulesets.Judgements
         private void load()
         {
             AutoSizeAxes = Axes.Both;
+            
+            Logger.Log(@$"hit that yeah {TimeOffset}");
 
             InternalChildren = new Drawable[]
             {
@@ -42,7 +46,7 @@ namespace osu.Game.Rulesets.Judgements
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Text = Result.GetDescription().ToUpperInvariant(),
+                    Text = @$"{TimeOffset}",
                     Colour = colours.ForHitResult(Result),
                     Font = OsuFont.Numeric.With(size: 20),
                     Scale = new Vector2(0.85f, 1),

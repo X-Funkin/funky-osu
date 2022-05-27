@@ -24,11 +24,11 @@ namespace osu.Game.Rulesets.Mania.UI
             return 0;
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result, double timeoffset) => new DefaultManiaJudgementPiece(result, timeoffset);
+        protected override Drawable CreateDefaultJudgement(JudgementResult result) => new DefaultManiaJudgementPiece(result);
 
         private class DefaultManiaJudgementPiece : DefaultJudgementPiece
         {
-            public DefaultManiaJudgementPiece(HitResult result, double timeoffset)
+            public DefaultManiaJudgementPiece(JudgementResult result)
                 : base(result)
             {
                 // string new_text = $@"{JudgementText.Text}";
@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Mania.UI
                 // JudgementText.Text = "Bazinga";
                 // set_the_test();
                 // TimeOffset = timeoffset;
-                TimeOffset = timeoffset;
+                // TimeOffset = result.TimeOffset;
             }
 
             protected override void LoadComplete()

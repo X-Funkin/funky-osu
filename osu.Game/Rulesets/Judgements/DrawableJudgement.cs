@@ -13,6 +13,8 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Skinning;
 using osuTK;
 
+using osu.Framework.Logging;
+
 namespace osu.Game.Rulesets.Judgements
 {
     /// <summary>
@@ -155,23 +157,32 @@ namespace osu.Game.Rulesets.Judgements
         }
 
         private HitResult? currentDrawableType;
+        private double? currentTimeOffset;
 
         private void prepareDrawables()
         {
             var type = Result?.Type ?? HitResult.Perfect; //TODO: better default type from ruleset
-            var timeoffset = Result?.TimeOffset ?? 0; //ugh //wtfrick why does ^^^^ note crash but mine does??? // oooh the ?? is a null handler my bad
+            var timeoffset = Result?.TimeOffset ?? 0; //ugh //wtfrick why does ^^^^ not crash but mine does??? // oooh the ?? is a null handler my bad
+            if (Result == null){
+                // Result = new JudgementResult;
+                return;
+            }
+            Result.Type = type;
+            Result.TimeOffset = timeoffset;
+            // var judgementresult = Result?.Type ??;
             // var timeoffset = 1245;
             // TimeOffset = Result.TimeOffset;
             // todo: this should be removed once judgements are always pooled.
-            if (type == currentDrawableType)
-                return;
-
+            
+            // if (type == currentDrawableType && Math.Sign(timeoffset) != Math.Sign((decimal) currentTimeOffset))
+            //     return;
+            Logger.Log(@$"yeah got to the {type} {timeoffset}");
             // sub-classes might have added their own children that would be removed here if .InternalChild was used.
             if (JudgementBody != null)
                 RemoveInternal(JudgementBody);
 
-            AddInternal(JudgementBody = new SkinnableDrawable(new GameplaySkinComponent<HitResult>(type), _ =>
-                CreateDefaultJudgement(type,(double) timeoffset), confineMode: ConfineMode.NoScaling)
+            AddInternal(JudgementBody = new SkinnableDrawable(new GameplaySkinComponent<JudgementResult>(Result), _ =>
+                CreateDefaultJudgement(Result), confineMode: ConfineMode.NoScaling)
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
@@ -188,6 +199,7 @@ namespace osu.Game.Rulesets.Judgements
             proxyContent();
 
             currentDrawableType = type;
+            currentTimeOffset = timeoffset;
 
             void proxyContent()
             {
@@ -202,6 +214,6 @@ namespace osu.Game.Rulesets.Judgements
             }
         }
 
-        protected virtual Drawable CreateDefaultJudgement(HitResult result, double timeoffset) => new DefaultJudgementPiece(result, 1245);
+        protected virtual Drawable CreateDefaultJudgement(JudgementResult result) => new DefaultJudgementPiece(result);
     }
 }

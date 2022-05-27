@@ -13,6 +13,10 @@ using osu.Game.Rulesets.Mania.Beatmaps;
 using osu.Game.Rulesets.Objects.Legacy;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Skinning;
+using osuTK;
+using osu.Game.Rulesets.Judgements;
+
+using osu.Framework.Logging;
 
 namespace osu.Game.Rulesets.Mania.Skinning.Legacy
 {
@@ -35,27 +39,27 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                 { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0 }
             };
         // soon
-        // private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> early_hit_result_mapping
-        //     = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
-        //     {
-        //         { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300gEarly },
-        //         { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300Early },
-        //         { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200Early },
-        //         { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100Early },
-        //         { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50Early },
-        //         { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0Early }
-        //     };
+        private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> early_hit_result_mapping
+            = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
+            {
+                { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300gEarly },
+                { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300Early },
+                { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200Early },
+                { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100Early },
+                { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50Early },
+                { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0Early }
+            };
 
-        // private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> late_hit_result_mapping
-        //     = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
-        //     {
-        //         { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300gLate },
-        //         { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300Late },
-        //         { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200Late },
-        //         { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100Late },
-        //         { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50Late },
-        //         { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0Late }
-            // };
+        private static readonly IReadOnlyDictionary<HitResult, LegacyManiaSkinConfigurationLookups> late_hit_result_mapping
+            = new Dictionary<HitResult, LegacyManiaSkinConfigurationLookups>
+            {
+                { HitResult.Perfect, LegacyManiaSkinConfigurationLookups.Hit300gLate },
+                { HitResult.Great, LegacyManiaSkinConfigurationLookups.Hit300Late },
+                { HitResult.Good, LegacyManiaSkinConfigurationLookups.Hit200Late },
+                { HitResult.Ok, LegacyManiaSkinConfigurationLookups.Hit100Late },
+                { HitResult.Meh, LegacyManiaSkinConfigurationLookups.Hit50Late },
+                { HitResult.Miss, LegacyManiaSkinConfigurationLookups.Hit0Late }
+            };
 
         /// <summary>
         /// Mapping of <see cref="HitResult"/> to their corresponding
@@ -71,7 +75,27 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                 { HitResult.Meh, "mania-hit50" },
                 { HitResult.Miss, "mania-hit0" }
             };
-
+        private static readonly IReadOnlyDictionary<HitResult, string> default_early_hit_result_skin_filenames
+            = new Dictionary<HitResult, string>
+            {
+                { HitResult.Perfect, "mania-hit300gearly" },
+                { HitResult.Great, "mania-hit300early" },
+                { HitResult.Good, "mania-hit200early" },
+                { HitResult.Ok, "mania-hit100early" },
+                { HitResult.Meh, "mania-hit50early" },
+                { HitResult.Miss, "mania-hit0early" }
+            };
+        private static readonly IReadOnlyDictionary<HitResult, string> default_late_hit_result_skin_filenames
+            = new Dictionary<HitResult, string>
+            {
+                { HitResult.Perfect, "mania-hit300glate" },
+                { HitResult.Great, "mania-hit300late" },
+                { HitResult.Good, "mania-hit200late" },
+                { HitResult.Ok, "mania-hit100late" },
+                { HitResult.Meh, "mania-hit50late" },
+                { HitResult.Miss, "mania-hit0late" }
+            };
+        
         private readonly Lazy<bool> isLegacySkin;
 
         /// <summary>
@@ -99,6 +123,10 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             {
                 case GameplaySkinComponent<HitResult> resultComponent:
                     return getResult(resultComponent.Component);
+                case GameplaySkinComponent<JudgementResult> resultComponent:
+                    // return getJudgementResult(resultComponent.Component);
+                    Logger.Log("yup gameplayskincomponent judgement result");
+                    return getJudgementResult(resultComponent.Component);
 
                 case ManiaSkinComponent maniaComponent:
                     if (!isLegacySkin.Value || !hasKeyTexture.Value)
@@ -156,6 +184,46 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
                               ?? default_hit_result_skin_filenames[result];
 
             var animation = this.GetAnimation(filename, true, true);
+            return animation == null ? null : new LegacyManiaJudgementPiece(result, animation);
+        }
+
+        private Drawable getJudgementResult(JudgementResult judgement_result)
+        {
+            // return getResult(judgement_result.Type);
+            var this_hit_result_mapping = hit_result_mapping;
+            HitResult result = judgement_result.Type;
+            var hit_list = default_hit_result_skin_filenames;
+            bool early_or_late = false;
+            if (judgement_result.TimeOffset<0){
+                this_hit_result_mapping = early_hit_result_mapping;
+                hit_list = default_early_hit_result_skin_filenames;
+                early_or_late = true;
+            }
+            if (judgement_result.TimeOffset>0){
+                this_hit_result_mapping = late_hit_result_mapping;
+                hit_list = default_late_hit_result_skin_filenames;
+                early_or_late = true;
+            }
+            if (!this_hit_result_mapping.ContainsKey(result)) 
+                return null;
+            Logger.Log("okay, let's see what's going on");
+            Logger.Log(@$"{result}");
+            Logger.Log(@$"{this_hit_result_mapping[result]}");
+            Logger.Log(@$"{this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value}");
+            Logger.Log(@$"{default_hit_result_skin_filenames[result]}");
+            string filename = this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value
+                              ?? hit_list[result];
+            Logger.Log(@$"uh yeah we heard a dying [{filename}] on the premises");
+            var animation = this.GetAnimation(filename, true, true);
+            Logger.Log(@$"yeah that anim is {animation} ({animation == null})");
+            if (early_or_late){
+                Logger.Log("early_or_late");
+            }
+            if (animation == null && early_or_late){
+                filename = this.GetManiaSkinConfig<string>(this_hit_result_mapping[result])?.Value
+                              ?? default_hit_result_skin_filenames[result];
+                animation = this.GetAnimation(filename, true, true);
+            }
             return animation == null ? null : new LegacyManiaJudgementPiece(result, animation);
         }
 

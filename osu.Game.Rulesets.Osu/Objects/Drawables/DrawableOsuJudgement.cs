@@ -63,14 +63,14 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             base.ApplyHitAnimations();
         }
 
-        protected override Drawable CreateDefaultJudgement(HitResult result, double timeoffset) => new OsuJudgementPiece(result, timeoffset);
+        protected override Drawable CreateDefaultJudgement(JudgementResult result) => new OsuJudgementPiece(result);
 
         private class OsuJudgementPiece : DefaultJudgementPiece
         {
-            public OsuJudgementPiece(HitResult result, double timeoffset = 0)
+            public OsuJudgementPiece(JudgementResult result)
                 : base(result)
             {
-                TimeOffset = timeoffset;
+                TimeOffset = result.TimeOffset;
             }
 
             public override void PlayAnimation()

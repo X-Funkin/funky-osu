@@ -54,5 +54,17 @@ namespace osu.Game.Skinning
         Hit50,
         Hit0,
         KeysUnderNotes,
+        Hit300gEarly,
+        Hit300Early,
+        Hit200Early,
+        Hit100Early,
+        Hit50Early,
+        Hit0Early,
+        Hit300gLate,
+        Hit300Late,
+        Hit200Late,
+        Hit100Late,
+        Hit50Late,
+        Hit0Late,
     }
 }
