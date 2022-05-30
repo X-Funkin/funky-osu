@@ -162,6 +162,7 @@ namespace osu.Game.Screens.Select
             private Container bpmLabelContainer;
 
             private Container lengthLabelContainer;
+            private Container npsLabelContainer;
 
             private readonly WorkingBeatmap working;
             private readonly RulesetInfo ruleset;
@@ -348,9 +349,12 @@ namespace osu.Game.Screens.Select
 
                     refreshLengthLabel();
 
+                    refreshNPSLabel();
+                    
                     settingChangeTracker = new ModSettingChangeTracker(m.NewValue);
                     settingChangeTracker.SettingChanged += _ => refreshBPMLabel();
                     settingChangeTracker.SettingChanged += _ => refreshLengthLabel();
+                    settingChangeTracker.SettingChanged += _ => refreshNPSLabel();
                 }, true);
             }
 
@@ -366,6 +370,10 @@ namespace osu.Game.Screens.Select
                         AutoSizeAxes = Axes.Both,
                     },
                     bpmLabelContainer = new Container
+                    {
+                        AutoSizeAxes = Axes.Both,
+                    },
+                    npsLabelContainer = new Container
                     {
                         AutoSizeAxes = Axes.Both,
                     },
@@ -449,6 +457,27 @@ namespace osu.Game.Screens.Select
                     {
                         Name = "Length",
                         CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Length),
+                        Content = labelText,
+                    });
+            }
+
+            private void refreshNPSLabel()
+            {
+                var beatmap = working.Beatmap;
+                if (beatmap == null || npsLabelContainer == null)
+                    return;
+                
+                double rate = 1;
+                foreach (var mod in mods.Value.OfType<IApplicableToRate>())
+                    rate = mod.ApplyToRate(0, rate);
+                // working.BeatmapInfo.
+                double beatmap_length = (working.BeatmapInfo.Length/rate)/1000.0;
+                var note_count = beatmap.HitObjects.Count;
+                string labelText = @$"{(double) note_count/beatmap_length:N3}";
+                npsLabelContainer.Child = new InfoLabel(new BeatmapStatistic
+                    {
+                        Name = "Average NPS",
+                        CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Size),
                         Content = labelText,
                     });
             }
