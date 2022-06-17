@@ -239,7 +239,11 @@ namespace osu.Game.Rulesets.Taiko
                         new StatisticItem(string.Empty, () => new SimpleStatisticTable(3, new SimpleStatisticItem[]
                         {
                             new AverageHitError(timedHitEvents),
-                            new UnstableRate(timedHitEvents)
+                            new HitErrorStandardDeviation(timedHitEvents),
+                            new NotesTopSpeed(timedHitEvents),
+                            new LargestHitError(timedHitEvents),
+                            new UnstableRate(timedHitEvents),
+                            new NotesTopSpeed(timedHitEvents,100),
                         }), true)
                     }
                 }

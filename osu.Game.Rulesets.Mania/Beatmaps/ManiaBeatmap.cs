@@ -41,6 +41,9 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
         {
             int notes = HitObjects.Count(s => s is Note);
             int holdNotes = HitObjects.Count(s => s is HoldNote);
+            int totalNotes = notes+holdNotes;
+            // L +
+            double ratio = (totalNotes == 0)? 0 : (double)holdNotes/totalNotes;
 
             return new[]
             {
@@ -54,7 +57,7 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
                 {
                     Name = @"Hold Note Count",
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders),
-                    Content = holdNotes.ToString(),
+                    Content = @$"{holdNotes} ({ratio*100:N0}%)", //i know {:P0} but i don't like the space (2 %) and this is faster than looking it up
                 },
             };
         }

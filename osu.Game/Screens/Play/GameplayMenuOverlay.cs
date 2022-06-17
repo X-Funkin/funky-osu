@@ -224,21 +224,21 @@ namespace osu.Game.Screens.Play
             {
                 new OsuSpriteText
                 {
-                    Text = "You've retried ",
+                    Text = "L + Low Acc + ",
                     Shadow = true,
                     ShadowColour = new Color4(0, 0, 0, 0.25f),
                     Font = OsuFont.GetFont(size: 18),
                 },
                 new OsuSpriteText
                 {
-                    Text = "time".ToQuantity(retries),
+                    Text = "retry".ToQuantity(retries),
                     Font = OsuFont.GetFont(weight: FontWeight.Bold, size: 18),
                     Shadow = true,
                     ShadowColour = new Color4(0, 0, 0, 0.25f),
                 },
                 new OsuSpriteText
                 {
-                    Text = " in this session",
+                    Text = retries >= 100? " + Touch Grass": "",
                     Shadow = true,
                     ShadowColour = new Color4(0, 0, 0, 0.25f),
                     Font = OsuFont.GetFont(size: 18),

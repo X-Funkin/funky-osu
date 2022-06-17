@@ -230,7 +230,7 @@ namespace osu.Game.Screens.Ranking.Statistics
                         RelativeSizeAxes = Axes.Both,
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
-                        Colour = isCentre ? Color4.White : Color4Extensions.FromHex("#66FFCC"),
+                        Colour = isCentre ? Color4.White : (value > 0) ? Color4Extensions.FromHex("#66FFCC") : Color4Extensions.FromHex("#338066"),
                         Height = minimum_height,
                     },
                 };

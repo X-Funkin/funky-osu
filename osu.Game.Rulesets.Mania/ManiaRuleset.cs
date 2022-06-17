@@ -396,7 +396,12 @@ namespace osu.Game.Rulesets.Mania
                     new StatisticItem(string.Empty, () => new SimpleStatisticTable(3, new SimpleStatisticItem[]
                     {
                         new AverageHitError(score.HitEvents),
-                        new UnstableRate(score.HitEvents)
+                        new HitErrorStandardDeviation(score.HitEvents),
+                        new NotesTopSpeed(score.HitEvents),
+                        new LargestHitError(score.HitEvents),
+                        new UnstableRate(score.HitEvents),
+                        new NotesTopSpeed(score.HitEvents,100),
+                        // new EarliestHitError(score.HitEvents),
                     }), true)
                 }
             }
