@@ -828,38 +828,38 @@ namespace osu.Game.Screens.Select
             return set;
         }
 
-        private CarouselSingleBeatmap createSingleCarousel(BeatmapInfo beatmap)
-        {
-            // This can be moved to the realm query if required using:
-            // .Filter("DeletePending == false && Protected == false && ANY Beatmaps.Hidden == false")
-            //
-            // As long as we are detaching though, it makes more sense to do it here as adding to the realm query has an overhead
-            // as seen at https://github.com/realm/realm-dotnet/discussions/2773#discussioncomment-2004275.
-            if (beatmap.Hidden)
-                return null;
+        // private CarouselSingleBeatmap createSingleCarousel(BeatmapInfo beatmap)
+        // {
+        //     // This can be moved to the realm query if required using:
+        //     // .Filter("DeletePending == false && Protected == false && ANY Beatmaps.Hidden == false")
+        //     //
+        //     // As long as we are detaching though, it makes more sense to do it here as adding to the realm query has an overhead
+        //     // as seen at https://github.com/realm/realm-dotnet/discussions/2773#discussioncomment-2004275.
+        //     if (beatmap.Hidden)
+        //         return null;
 
-            var single = new CarouselSingleBeatmap(beatmap)
-            {
-                // GetRecommendedBeatmap = beatmaps => GetRecommendedBeatmap?.Invoke(beatmaps)
-            };
+        //     var single = new CarouselSingleBeatmap(beatmap)
+        //     {
+        //         // GetRecommendedBeatmap = beatmaps => GetRecommendedBeatmap?.Invoke(beatmaps)
+        //     };
 
-            // foreach (var c in set.Beatmaps)
-            // {
-            single.State.ValueChanged += state =>
-            {
-                if (state.NewValue == CarouselItemState.Selected)
-                {
-                    // selectedBeatmapSet = set;
-                    SelectionChanged?.Invoke(single.BeatmapInfo);
+        //     // foreach (var c in set.Beatmaps)
+        //     // {
+        //     single.State.ValueChanged += state =>
+        //     {
+        //         if (state.NewValue == CarouselItemState.Selected)
+        //         {
+        //             // selectedBeatmapSet = set;
+        //             SelectionChanged?.Invoke(single.BeatmapInfo);
 
-                    itemsCache.Invalidate();
-                    ScrollToSelected();
-                }
-            };
-            // }
+        //             itemsCache.Invalidate();
+        //             ScrollToSelected();
+        //         }
+        //     };
+        //     // }
 
-            return single;
-        }
+        //     return single;
+        // }
 
         private const float panel_padding = 5;
 
