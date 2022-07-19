@@ -1,8 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-#nullable enable
-
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -154,7 +152,7 @@ namespace osu.Game.Graphics.UserInterfaceV2
         [BackgroundDependencyLoader(true)]
         private void load(OverlayColourProvider? colourProvider, OsuColour osuColour)
         {
-            background.Colour = colourProvider?.Background4 ?? Color4Extensions.FromHex(@"1c2125");
+            background.Colour = colourProvider?.Background5 ?? Color4Extensions.FromHex(@"1c2125");
             descriptionText.Colour = osuColour.Yellow;
         }
 
