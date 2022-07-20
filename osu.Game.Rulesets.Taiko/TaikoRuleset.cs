@@ -153,7 +153,8 @@ namespace osu.Game.Rulesets.Taiko
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
                         new TaikoModMuted(),
-                        new ModAdaptiveSpeed()
+                        new ModAdaptiveSpeed(),
+                        new TaikoModStealth()
                     };
 
                 default:

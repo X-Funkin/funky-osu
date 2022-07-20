@@ -197,6 +197,7 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModApproachDifferent(),
                         new OsuModMuted(),
                         new OsuModNoScope(),
+                        new OsuModStealth(),
                         new MultiMod(new OsuModMagnetised(), new OsuModRepel()),
                         new ModAdaptiveSpeed()
                     };
