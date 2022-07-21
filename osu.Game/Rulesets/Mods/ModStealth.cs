@@ -14,12 +14,14 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModStealth : Mod, IApplicableToScoreProcessor, IApplicableToPlayer
+    public abstract class ModStealth : ModWithVisibilityAdjustment, IApplicableToScoreProcessor, IApplicableToPlayer
     {
         public override string Name => "Stealth";
         public override string Acronym => "SH";
@@ -49,6 +51,7 @@ namespace osu.Game.Rulesets.Mods
         protected const float TRANSITION_DURATION = 100;
 
         protected BindableNumber<int> CurrentCombo;
+        protected BindableNumber<int> MaxCombo;
 
         protected IBindable<bool> IsBreakTime;
 
@@ -58,6 +61,11 @@ namespace osu.Game.Rulesets.Mods
 
         public ScoreRank AdjustRank(ScoreRank rank, double accuracy) => rank;
 
+        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state){}
+
+        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state){}
+
+
         public void ApplyToPlayer(Player player)
         {
             IsBreakTime = player.IsBreakTime.GetBoundCopy();
@@ -65,13 +73,21 @@ namespace osu.Game.Rulesets.Mods
 
         public void ApplyToScoreProcessor(ScoreProcessor scoreProcessor)
         {
-            if (HiddenComboCount.Value == 0) return;
 
             CurrentCombo = scoreProcessor.Combo.GetBoundCopy();
             CurrentCombo.BindValueChanged(combo =>
             {
-                ComboBasedAlpha = Math.Max(MIN_ALPHA, 1 - (float)combo.NewValue / HiddenComboCount.Value);
+                UpdateComboAlpha(combo.NewValue);
             }, true);
+            MaxCombo = scoreProcessor.HighestCombo.GetBoundCopy();
+            // MaxCombo.BindValueChanged(maxcombo =>)
+        }
+
+        public virtual void UpdateComboAlpha(int combo)
+        {
+            // MaxCombo = Math.Max(MaxCombo, combo);
+            if(HiddenComboCount.Value == 0){ComboBasedAlpha = 1.0f; return;}
+            ComboBasedAlpha = Math.Max(MIN_ALPHA, 1 - (float)combo / HiddenComboCount.Value);
         }
 
         public virtual void Update(Playfield playfield)

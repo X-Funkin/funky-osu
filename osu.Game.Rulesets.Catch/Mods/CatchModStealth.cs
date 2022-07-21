@@ -10,6 +10,6 @@ namespace osu.Game.Rulesets.Catch.Mods
 {
     public class CatchModStealth : ModStealth, IUpdatableByPlayfield
     {
-        public override string Description => "Where are the fruits?";
+        public override string Description => "Where are the dons and kans?";
     }
 }
