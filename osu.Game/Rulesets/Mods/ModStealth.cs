@@ -14,18 +14,16 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Scoring;
-using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModStealth : ModWithVisibilityAdjustment, IApplicableToScoreProcessor, IApplicableToPlayer
+    public abstract class ModStealth : ModWithVisibilityAdjustment, IApplicableToScoreProcessor
     {
         public override string Name => "Stealth";
         public override string Acronym => "SH";
-        public override ModType Type => ModType.Fun;
+        public override ModType Type => ModType.DifficultyIncrease;
         public override IconUsage? Icon => FontAwesome.Solid.EyeSlash;
         public override double ScoreMultiplier => 1;
 
@@ -52,21 +50,35 @@ namespace osu.Game.Rulesets.Mods
 
         protected BindableNumber<int> CurrentCombo;
 
-        protected IBindable<bool> IsBreakTime;
+
+
 
         protected float ComboBasedAlpha = MIN_ALPHA; // Initialized so that hitobjects on "always hide" still function
 
-        public ScoreRank AdjustRank(ScoreRank rank, double accuracy) => rank;
+        public ScoreRank AdjustRank(ScoreRank rank, double accuracy)
+        {
+            switch (rank)
+            {
+                case ScoreRank.X:
+                    return ScoreRank.XH;
+
+                case ScoreRank.S:
+                    return ScoreRank.SH;
+
+                default:
+                    return rank;
+            }
+        }
 
         protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state){}
         protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state){}
-        public void ApplyToPlayer(Player player)
-        {
-            IsBreakTime = player.IsBreakTime.GetBoundCopy();
-        }
+
 
         public void ApplyToScoreProcessor(ScoreProcessor scoreProcessor)
         {
+            // Default value of ScoreProcessor's Rank in Stealth Mod should be SS+
+            scoreProcessor.Rank.Value = ScoreRank.XH;
+
             if (HiddenComboCount.Value == 0) return;
 
             CurrentCombo = scoreProcessor.Combo.GetBoundCopy();
@@ -82,6 +94,9 @@ namespace osu.Game.Rulesets.Mods
             float finalAlpha = (float)Interpolation.Lerp(playfield.HitObjectContainer.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
             playfield.HitObjectContainer.Alpha  = finalAlpha;
         }
+        protected readonly BindableInt Combo = new BindableInt();
+
+        
     }
 
     public class StealthComboSlider : OsuSliderBar<int>

@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Mania.Mods
     public class ManiaModFlashlight : ModFlashlight<ManiaHitObject>
     {
         public override double ScoreMultiplier => 1;
-        public override Type[] IncompatibleMods => new[] { typeof(ModHidden) };
+        public override Type[] IncompatibleMods => new[] { typeof(ModHidden) , typeof(ModStealth)};
 
         [SettingSource("Flashlight size", "Multiplier applied to the default flashlight size.")]
         public override BindableFloat SizeMultiplier { get; } = new BindableFloat

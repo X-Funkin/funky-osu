@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Mania.Mods
 {
     public abstract class ManiaModPlayfieldCover : ModHidden, IApplicableToDrawableRuleset<ManiaHitObject>
     {
-        public override Type[] IncompatibleMods => new[] { typeof(ModFlashlight<ManiaHitObject>) };
+        public override Type[] IncompatibleMods => new[] { typeof(ModFlashlight<ManiaHitObject>), typeof(ManiaModStealth) };
 
         /// <summary>
         /// The direction in which the cover should expand.

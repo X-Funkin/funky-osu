@@ -222,8 +222,8 @@ namespace osu.Game.Rulesets.Mania
                         new ManiaModHardRock(),
                         new MultiMod(new ManiaModSuddenDeath(), new ManiaModPerfect()),
                         new MultiMod(new ManiaModDoubleTime(), new ManiaModNightcore()),
-                        new MultiMod(new ManiaModFadeIn(), new ManiaModHidden()),
-                        new ManiaModFlashlight(),
+                        new MultiMod(new ManiaModFadeIn(), new ManiaModHidden(), new ManiaModStealth()),
+                        new ManiaModFlashlight()
                     };
 
                 case ModType.Conversion:
@@ -260,8 +260,7 @@ namespace osu.Game.Rulesets.Mania
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
                         new ManiaModMuted(),
-                        new ModAdaptiveSpeed(),
-                        new ManiaModStealth()
+                        new ModAdaptiveSpeed()
                     };
 
                 default:

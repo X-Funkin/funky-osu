@@ -5,22 +5,17 @@
 
 using System;
 using System.Linq;
-using osu.Framework.Bindables;
 using osu.Framework.Utils;
-using osu.Game.Beatmaps;
-using osu.Game.Configuration;
-using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mania.UI;
 using osu.Game.Rulesets.UI;
-using osu.Game.Utils;
 
 namespace osu.Game.Rulesets.Mania.Mods
 {
     public class ManiaModStealth : ModStealth, IUpdatableByPlayfield
     {
         public override string Description => "Where are the notes?";
+        public override Type[] IncompatibleMods => new[] {typeof(ModHidden),typeof(ModFlashlight)};
         public override void Update(Playfield playfield)
         {
             var maniathingPlayField = (ManiaPlayfield)playfield;
