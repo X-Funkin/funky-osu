@@ -24,20 +24,15 @@ namespace osu.Game.Rulesets.Mania.Mods
         public override void Update(Playfield playfield)
         {
             var maniathingPlayField = (ManiaPlayfield)playfield;
-            // bool shouldAlwaysShowCursor = IsBreakTime.Value || spinnerPeriods.IsInAny(playfield.Clock.CurrentTime);
-            // float targetAlpha = shouldAlwaysShowCursor ? 1 : ComboBasedAlpha;
-
             float targetAlpha = ComboBasedAlpha;
             float finalAlpha = (float)Interpolation.Lerp(playfield.HitObjectContainer.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
             
             foreach(var stage in maniathingPlayField.Stages){
-                // stage.Alpha = finalAlpha;
                 foreach(var column in stage.Columns){
                     column.HitObjectArea.HitObjectContainer.Alpha = finalAlpha;
                 }
             }
             maniathingPlayField.HitObjectContainer.Alpha = finalAlpha;
-            // playfield.Cursor.Alpha = (float)Interpolation.Lerp(playfield.Cursor.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
         }
     }
 

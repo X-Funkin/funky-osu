@@ -21,9 +21,6 @@ namespace osu.Game.Rulesets.Osu.Mods
     public class OsuModStealth : ModStealth, IUpdatableByPlayfield, IApplicableToBeatmap
     {
         public override string Description => "Where are the circles?";
-
-        private PeriodTracker spinnerPeriods;
-
         
 
         [SettingSource("Hide Combo Guides", "Hides the guides between circles in a combo along with the beatmap")]
@@ -32,22 +29,15 @@ namespace osu.Game.Rulesets.Osu.Mods
             Default = true,
             Value = true
         };
-        public void ApplyToBeatmap(IBeatmap beatmap)
-        {
-            spinnerPeriods = new PeriodTracker(beatmap.HitObjects.OfType<Spinner>().Select(b => new Period(b.StartTime - TRANSITION_DURATION, b.EndTime)));
-        }
 
         public override void Update(Playfield playfield)
         {
             var osuPlayField = (OsuPlayfield)playfield;
-            // bool shouldAlwaysShowCursor = IsBreakTime.Value || spinnerPeriods.IsInAny(playfield.Clock.CurrentTime);
-            // float targetAlpha = shouldAlwaysShowCursor ? 1 : ComboBasedAlpha;
             float targetAlpha = ComboBasedAlpha;
             float finalAlpha = (float)Interpolation.Lerp(playfield.HitObjectContainer.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
             
             osuPlayField.HitObjectContainer.Alpha = finalAlpha;
             osuPlayField.FollowPoints.Alpha = HideComboGuides.Value? finalAlpha:1.0f;
-            // playfield.Cursor.Alpha = (float)Interpolation.Lerp(playfield.Cursor.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
         }
     }
 }

@@ -14,12 +14,14 @@ using osu.Game.Graphics.UserInterface;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Scoring;
 using osu.Game.Screens.Play;
 
 namespace osu.Game.Rulesets.Mods
 {
-    public abstract class ModStealth : Mod, IApplicableToScoreProcessor, IApplicableToPlayer
+    public abstract class ModStealth : ModWithVisibilityAdjustment, IApplicableToScoreProcessor, IApplicableToPlayer
     {
         public override string Name => "Stealth";
         public override string Acronym => "SH";
@@ -54,10 +56,10 @@ namespace osu.Game.Rulesets.Mods
 
         protected float ComboBasedAlpha = MIN_ALPHA; // Initialized so that hitobjects on "always hide" still function
 
-        // public abstract BindableInt HiddenComboCount { get; }
-
         public ScoreRank AdjustRank(ScoreRank rank, double accuracy) => rank;
 
+        protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state){}
+        protected override void ApplyNormalVisibilityState(DrawableHitObject hitObject, ArmedState state){}
         public void ApplyToPlayer(Player player)
         {
             IsBreakTime = player.IsBreakTime.GetBoundCopy();
@@ -76,11 +78,7 @@ namespace osu.Game.Rulesets.Mods
 
         public virtual void Update(Playfield playfield)
         {
-            //bool shouldAlwaysShowCursor = IsBreakTime.Value || spinnerPeriods.IsInAny(playfield.Clock.CurrentTime);
-            //float targetAlpha = shouldAlwaysShowCursor ? 1 : ComboBasedAlpha;
             float targetAlpha = ComboBasedAlpha;
-            // playfield.Cursor.Alpha = (float)Interpolation.Lerp(playfield.Cursor.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
-            // float targetAlpha = ComboBasedAlpha;
             float finalAlpha = (float)Interpolation.Lerp(playfield.HitObjectContainer.Alpha, targetAlpha, Math.Clamp(playfield.Time.Elapsed / TRANSITION_DURATION, 0, 1));
             playfield.HitObjectContainer.Alpha  = finalAlpha;
         }
