@@ -1,8 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +21,6 @@ using osu.Game.Online.Rooms.RoomStatuses;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Utils;
-using APIUser = osu.Game.Online.API.Requests.Responses.APIUser;
 
 namespace osu.Game.Online.Multiplayer
 {
@@ -93,7 +90,7 @@ namespace osu.Game.Online.Multiplayer
         /// <summary>
         /// The joined <see cref="MultiplayerRoom"/>.
         /// </summary>
-        public virtual MultiplayerRoom? Room
+        public virtual MultiplayerRoom? Room // virtual for moq
         {
             get
             {
@@ -152,7 +149,7 @@ namespace osu.Game.Online.Multiplayer
                 // clean up local room state on server disconnect.
                 if (!connected.NewValue && Room != null)
                 {
-                    Logger.Log("Connection to multiplayer server was lost.", LoggingTarget.Runtime, LogLevel.Important);
+                    Logger.Log("Clearing room due to multiplayer server connection loss.", LoggingTarget.Runtime, LogLevel.Important);
                     LeaveRoom();
                 }
             }));
@@ -197,6 +194,7 @@ namespace osu.Game.Online.Multiplayer
 
                     APIRoom.Playlist.Clear();
                     APIRoom.Playlist.AddRange(joinedRoom.Playlist.Select(createPlaylistItem));
+                    APIRoom.CurrentPlaylistItem.Value = APIRoom.Playlist.Single(item => item.ID == joinedRoom.Settings.PlaylistItemId);
 
                     Debug.Assert(LocalUser != null);
                     addUserToAPIRoom(LocalUser);
@@ -414,7 +412,7 @@ namespace osu.Game.Online.Multiplayer
 
                 UserJoined?.Invoke(user);
                 RoomUpdated?.Invoke();
-            });
+            }, false);
         }
 
         Task IMultiplayerClient.UserLeft(MultiplayerRoomUser user) =>
@@ -737,6 +735,7 @@ namespace osu.Game.Online.Multiplayer
             APIRoom.Type.Value = Room.Settings.MatchType;
             APIRoom.QueueMode.Value = Room.Settings.QueueMode;
             APIRoom.AutoStartDuration.Value = Room.Settings.AutoStartDuration;
+            APIRoom.CurrentPlaylistItem.Value = APIRoom.Playlist.Single(item => item.ID == settings.PlaylistItemId);
 
             RoomUpdated?.Invoke();
         }
