@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Osu.Mods
             Value = false,
             Default = false,
         };
-        public override double ScoreMultiplier => ExponentialScore.Value ? 0.797193877551*MathF.Pow(1.2544f,(float)SpeedChange.Value) : 1.12; // Higher Speeds should be exponetially harder
+        public double ExpScoreMultiplier => ExponentialScore.Value ? 0.797193877551*MathF.Pow(1.2544f,(float)SpeedChange.Value) : 1.12; // Higher Speeds should be exponetially harder
+        public override double ScoreMultiplier => UsesDefaultConfiguration ? ExpScoreMultiplier : 1;
     }
 }

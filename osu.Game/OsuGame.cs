@@ -159,6 +159,8 @@ namespace osu.Game
 
         protected FirstRunSetupOverlay FirstRunOverlay { get; private set; }
 
+        private FPSCounter fpsCounter;
+
         private VolumeOverlay volume;
 
         private OsuLogo osuLogo;
@@ -814,6 +816,13 @@ namespace osu.Game
             ScreenStack.ScreenPushed += screenPushed;
             ScreenStack.ScreenExited += screenExited;
 
+            loadComponentSingleFile(fpsCounter = new FPSCounter
+            {
+                Anchor = Anchor.BottomRight,
+                Origin = Anchor.BottomRight,
+                Margin = new MarginPadding(5),
+            }, topMostOverlayContent.Add);
+
             if (!args?.Any(a => a == @"--no-version-overlay") ?? true)
                 loadComponentSingleFile(versionManager = new VersionManager { Depth = int.MinValue }, ScreenContainer.Add);
 
@@ -894,6 +903,8 @@ namespace osu.Game
             loadComponentSingleFile<IDialogOverlay>(new DialogOverlay(), topMostOverlayContent.Add, true);
 
             loadComponentSingleFile(CreateHighPerformanceSession(), Add);
+
+            loadComponentSingleFile(new BackgroundBeatmapProcessor(), Add);
 
             chatOverlay.State.BindValueChanged(_ => updateChatPollRate());
             // Multiplayer modes need to increase poll rate temporarily.
@@ -1114,6 +1125,10 @@ namespace osu.Game
 
             switch (e.Action)
             {
+                case GlobalAction.ToggleFPSDisplay:
+                    fpsCounter.ToggleVisibility();
+                    return true;
+
                 case GlobalAction.ToggleSkinEditor:
                     skinEditor.ToggleVisibility();
                     return true;

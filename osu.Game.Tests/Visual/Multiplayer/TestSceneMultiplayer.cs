@@ -24,7 +24,6 @@ using osu.Game.Online.API;
 using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Multiplayer;
 using osu.Game.Online.Rooms;
-using osu.Game.Overlays.Mods;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Catch;
 using osu.Game.Rulesets.Mods;
@@ -402,16 +401,18 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestPlayStartsWithCorrectBeatmapWhileAtSongSelect()
         {
-            createRoom(() => new Room
+            PlaylistItem? item = null;
+            createRoom(() =>
             {
-                Name = { Value = "Test Room" },
-                Playlist =
+                item = new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                 {
-                    new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
-                    {
-                        RulesetID = new OsuRuleset().RulesetInfo.OnlineID
-                    }
-                }
+                    RulesetID = new OsuRuleset().RulesetInfo.OnlineID
+                };
+                return new Room
+                {
+                    Name = { Value = "Test Room" },
+                    Playlist = { item }
+                };
             });
 
             pressReadyButton();
@@ -419,7 +420,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("Enter song select", () =>
             {
                 var currentSubScreen = ((Screens.OnlinePlay.Multiplayer.Multiplayer)multiplayerComponents.CurrentScreen).CurrentSubScreen;
-                ((MultiplayerMatchSubScreen)currentSubScreen).OpenSongSelection(multiplayerClient.ClientRoom?.Settings.PlaylistItemId);
+                ((MultiplayerMatchSubScreen)currentSubScreen).OpenSongSelection(item);
             });
 
             AddUntilStep("wait for song select", () => this.ChildrenOfType<MultiplayerMatchSongSelect>().FirstOrDefault()?.BeatmapSetsLoaded == true);
@@ -440,16 +441,18 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestPlayStartsWithCorrectRulesetWhileAtSongSelect()
         {
-            createRoom(() => new Room
+            PlaylistItem? item = null;
+            createRoom(() =>
             {
-                Name = { Value = "Test Room" },
-                Playlist =
+                item = new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                 {
-                    new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
-                    {
-                        RulesetID = new OsuRuleset().RulesetInfo.OnlineID
-                    }
-                }
+                    RulesetID = new OsuRuleset().RulesetInfo.OnlineID
+                };
+                return new Room
+                {
+                    Name = { Value = "Test Room" },
+                    Playlist = { item }
+                };
             });
 
             pressReadyButton();
@@ -457,7 +460,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("Enter song select", () =>
             {
                 var currentSubScreen = ((Screens.OnlinePlay.Multiplayer.Multiplayer)multiplayerComponents.CurrentScreen).CurrentSubScreen;
-                ((MultiplayerMatchSubScreen)currentSubScreen).OpenSongSelection(multiplayerClient.ClientRoom?.Settings.PlaylistItemId);
+                ((MultiplayerMatchSubScreen)currentSubScreen).OpenSongSelection(item);
             });
 
             AddUntilStep("wait for song select", () => this.ChildrenOfType<MultiplayerMatchSongSelect>().FirstOrDefault()?.BeatmapSetsLoaded == true);
@@ -478,16 +481,18 @@ namespace osu.Game.Tests.Visual.Multiplayer
         [Test]
         public void TestPlayStartsWithCorrectModsWhileAtSongSelect()
         {
-            createRoom(() => new Room
+            PlaylistItem? item = null;
+            createRoom(() =>
             {
-                Name = { Value = "Test Room" },
-                Playlist =
+                item = new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
                 {
-                    new PlaylistItem(beatmaps.GetWorkingBeatmap(importedSet.Beatmaps.First(b => b.Ruleset.OnlineID == 0)).BeatmapInfo)
-                    {
-                        RulesetID = new OsuRuleset().RulesetInfo.OnlineID
-                    }
-                }
+                    RulesetID = new OsuRuleset().RulesetInfo.OnlineID
+                };
+                return new Room
+                {
+                    Name = { Value = "Test Room" },
+                    Playlist = { item }
+                };
             });
 
             pressReadyButton();
@@ -495,7 +500,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
             AddStep("Enter song select", () =>
             {
                 var currentSubScreen = ((Screens.OnlinePlay.Multiplayer.Multiplayer)multiplayerComponents.CurrentScreen).CurrentSubScreen;
-                ((MultiplayerMatchSubScreen)currentSubScreen).OpenSongSelection(multiplayerClient.ClientRoom?.Settings.PlaylistItemId);
+                ((MultiplayerMatchSubScreen)currentSubScreen).OpenSongSelection(item);
             });
 
             AddUntilStep("wait for song select", () => this.ChildrenOfType<MultiplayerMatchSongSelect>().FirstOrDefault()?.BeatmapSetsLoaded == true);
@@ -627,7 +632,7 @@ namespace osu.Game.Tests.Visual.Multiplayer
 
             AddStep("invoke on back button", () => multiplayerComponents.OnBackButton());
 
-            AddAssert("mod overlay is hidden", () => this.ChildrenOfType<UserModSelectOverlay>().Single().State.Value == Visibility.Hidden);
+            AddAssert("mod overlay is hidden", () => this.ChildrenOfType<RoomSubScreen>().Single().UserModsSelectOverlay.State.Value == Visibility.Hidden);
 
             AddAssert("dialog overlay is hidden", () => DialogOverlay.State.Value == Visibility.Hidden);
 
