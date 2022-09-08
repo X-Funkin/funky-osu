@@ -53,9 +53,9 @@ namespace osu.Game.Rulesets.Mania.Difficulty
                 StarRating = skills[0].DifficultyValue() * star_scaling_factor,
                 Mods = mods,
                 GreatHitWindow = Math.Ceiling(getHitWindow300(mods) / clockRate),
-                ScoreMultiplier = getScoreMultiplier(mods),
+                // ScoreMultiplier = getScoreMultiplier(mods),
                 MaxCombo = beatmap.HitObjects.Sum(maxComboForObject),
-                Skills = skills
+                // Skills = skills
             };
         }
 

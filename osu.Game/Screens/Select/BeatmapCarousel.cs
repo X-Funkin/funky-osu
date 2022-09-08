@@ -362,7 +362,7 @@ namespace osu.Game.Screens.Select
             Scheduler.Update();
 
             //your mom
-            if (UseCoolSorting.Value){
+            if (UseCoolSorting.Value || true){
 
                 int maxdiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating+0.2);
                 int mindiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating-0.2);

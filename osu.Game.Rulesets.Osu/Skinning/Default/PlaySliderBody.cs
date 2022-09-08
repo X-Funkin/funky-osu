@@ -14,7 +14,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Osu.Skinning.Default
 {
-    public abstract class PlaySliderBody : SnakingSliderBody
+    public abstract class PlaySliderBody : SnakingSliderBody 
     {
         private IBindable<float> scaleBindable;
         private IBindable<int> pathVersion;

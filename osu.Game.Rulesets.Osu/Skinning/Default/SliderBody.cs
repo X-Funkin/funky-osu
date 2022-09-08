@@ -11,7 +11,7 @@ using osu.Framework.Graphics.Lines;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Game.Rulesets.Osu.Skinning.Default
+namespace osu.Game.Rulesets.Osu.Skinning.Default 
 {
     public abstract class SliderBody : CompositeDrawable
     {
@@ -108,8 +108,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
 
         private class DefaultDrawableSliderPath : DrawableSliderPath
         {
-            private const float opacity_at_centre = 0.3f;
-            private const float opacity_at_edge = 0.8f;
+            private const float opacity_at_centre = 1.0f; //0.3f
+            private const float opacity_at_edge = 1.0f; //0.8f
 
             protected override Color4 ColourAt(float position)
             {
@@ -117,7 +117,8 @@ namespace osu.Game.Rulesets.Osu.Skinning.Default
                     return BorderColour;
 
                 position -= CalculatedBorderPortion;
-                return new Color4(AccentColour.R, AccentColour.G, AccentColour.B, (opacity_at_edge - (opacity_at_edge - opacity_at_centre) * position / GRADIENT_PORTION) * AccentColour.A);
+                // return new Color4(AccentColour.R, AccentColour.G, AccentColour.B, (opacity_at_edge - (opacity_at_edge - opacity_at_centre) * position / GRADIENT_PORTION) * AccentColour.A);
+                return new Color4(1, 1, 1, (opacity_at_edge - (opacity_at_edge - opacity_at_centre) * position / GRADIENT_PORTION) * AccentColour.A);
             }
         }
     }

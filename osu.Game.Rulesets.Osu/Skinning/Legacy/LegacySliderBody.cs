@@ -37,6 +37,7 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                 float realGradientPortion = 1 - realBorderPortion;
 
                 if (position <= shadow_portion)
+                    // return new Color4(0f, 0f, 0f, 1.0f * position / shadow_portion);
                     return new Color4(0f, 0f, 0f, 0.25f * position / shadow_portion);
 
                 if (position <= realBorderPortion)
@@ -44,8 +45,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
 
                 position -= realBorderPortion;
 
-                Color4 outerColour = AccentColour.Darken(0.1f);
-                Color4 innerColour = lighten(AccentColour, 0.5f);
+                // Color4 outerColour = AccentColour.Darken(0.1f);
+                // Color4 innerColour = lighten(AccentColour, 0.5f);
+                Color4 outerColour = AccentColour;
+                Color4 innerColour = new Color4(1,1,1,0);
 
                 return LegacyUtils.InterpolateNonLinear(position / realGradientPortion, outerColour, innerColour, 0, 1);
             }
