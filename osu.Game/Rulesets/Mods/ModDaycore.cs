@@ -5,6 +5,7 @@ using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Game.Configuration;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Localisation;
 
 namespace osu.Game.Rulesets.Mods
 {
@@ -13,7 +14,7 @@ namespace osu.Game.Rulesets.Mods
         public override string Name => "Daycore";
         public override string Acronym => "DC";
         public override IconUsage? Icon => null;
-        public override string Description => "Whoaaaaa...";
+        public override LocalisableString Description => "Whoaaaaa...";
 
         [SettingSource("Do the pitch heck yeah!", "change pitch to actual speed")]
         public BindableBool PitchChange { get; } = new BindableBool
