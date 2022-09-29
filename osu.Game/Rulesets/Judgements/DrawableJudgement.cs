@@ -181,7 +181,7 @@ namespace osu.Game.Rulesets.Judgements
             Logger.Log(@$"yeah got to the {type} {timeoffset}");
             // sub-classes might have added their own children that would be removed here if .InternalChild was used.
             if (JudgementBody != null)
-                RemoveInternal(JudgementBody);
+                RemoveInternal(JudgementBody, true);
 
             AddInternal(JudgementBody = new SkinnableDrawable(new GameplaySkinComponent<JudgementResult>(Result), _ =>
                 CreateDefaultJudgement(Result), confineMode: ConfineMode.NoScaling)

@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Mods
         public override LocalisableString Description => "Zoooooooooom...";
 
         [SettingSource("Speed increase", "The actual increase to apply")]
-        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble
+        public override BindableNumber<double> SpeedChange { get; } = new BindableDouble(1.5)
         {
             MinValue = 1.01,
             MaxValue = 10,
