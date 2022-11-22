@@ -126,7 +126,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Legacy
             {
                 case GameplaySkinComponentLookup<HitResult> resultComponent:
                     return getResult(resultComponent.Component);
-                case GameplaySkinComponent<JudgementResult> resultComponent:
+                case GameplaySkinComponentLookup<JudgementResult> resultComponent:
                     // return getJudgementResult(resultComponent.Component);
                     // Logger.Log("yup gameplayskincomponent judgement result");
                     return getJudgementResult(resultComponent.Component);

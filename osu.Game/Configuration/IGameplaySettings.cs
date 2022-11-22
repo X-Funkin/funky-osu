@@ -19,5 +19,11 @@ namespace osu.Game.Configuration
         IBindable<float> ComboColourNormalisationAmount { get; }
 
         IBindable<float> PositionalHitsoundsLevel { get; }
+
+        IBindable<bool> PitchShiftHitsounds { get; }
+
+        IBindable<float> PitchShiftMinHitError { get; }
+        IBindable<float> PitchShiftMaxHitError { get; }
+        IBindable<float> PitchShiftRange { get; }
     }
 }

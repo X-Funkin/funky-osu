@@ -399,12 +399,12 @@ namespace osu.Game.Skinning
 
                     return null;
 
-                case GameplaySkinComponent<JudgementResult> resultComponent:
+                case GameplaySkinComponentLookup<JudgementResult> resultComponent:
                     //lmaooo just a copy of the top because i don't want to worry about standard early/late judgements
                     // Func<Drawable?> ncreateDrawable = () => getJudgementAnimation(resultComponent.Component.Type);
                     //it's time
                     //TO WORRY ABOUT STANDARD EARLY/LATE JUDGEMENTS LET'S GO
-                    Func<Drawable?> ncreateDrawable = () => getEarlyLateJudgementAnimation(resultComponent.Component);
+                    Func<Drawable> ncreateDrawable = () => getEarlyLateJudgementAnimation(resultComponent.Component).AsNonNull();
 
                     // kind of wasteful that we throw this away, but should do for now.
                     if (ncreateDrawable() != null)
@@ -418,13 +418,6 @@ namespace osu.Game.Skinning
                     }
 
                     return null;
-
-
-                case SkinnableSprite.SpriteComponent sprite:
-                    return this.GetAnimation(sprite.LookupName, false, false);
-
-                default:
-                    throw new UnsupportedSkinComponentException(component);
             }
 
             return null;

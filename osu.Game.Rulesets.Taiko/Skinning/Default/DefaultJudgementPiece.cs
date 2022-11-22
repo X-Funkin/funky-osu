@@ -2,13 +2,14 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Graphics;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Taiko.Skinning.Default
 {
-    public class DefaultJudgementPiece : Rulesets.Judgements.DefaultJudgementPiece
+    public class DefaultJudgementPiece : Rulesets.Judgements.DefaultJudgementPiece 
     {
-        public DefaultJudgementPiece(HitResult result)
+        public DefaultJudgementPiece(JudgementResult result)
             : base(result)
         {
             RelativePositionAxes = Axes.Both;

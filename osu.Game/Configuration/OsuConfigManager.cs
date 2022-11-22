@@ -289,6 +289,11 @@ namespace osu.Game.Configuration
 
         IBindable<float> IGameplaySettings.ComboColourNormalisationAmount => GetOriginalBindable<float>(OsuSetting.ComboColourNormalisationAmount);
         IBindable<float> IGameplaySettings.PositionalHitsoundsLevel => GetOriginalBindable<float>(OsuSetting.PositionalHitsoundsLevel);
+
+        IBindable<bool> IGameplaySettings.PitchShiftHitsounds => GetOriginalBindable<bool>(OsuSetting.PitchShiftHitsounds);
+        IBindable<float> IGameplaySettings.PitchShiftMinHitError => GetOriginalBindable<float>(OsuSetting.PitchShiftMinHitError);
+        IBindable<float> IGameplaySettings.PitchShiftMaxHitError => GetOriginalBindable<float>(OsuSetting.PitchShiftMaxHitError);
+        IBindable<float> IGameplaySettings.PitchShiftRange => GetOriginalBindable<float>(OsuSetting.PitchShiftRange);
     }
 
     // IMPORTANT: These are used in user configuration files.

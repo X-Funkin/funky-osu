@@ -168,5 +168,12 @@ namespace osu.Game.Screens.Edit.Compose
 
         // Arguable.
         IBindable<float> IGameplaySettings.PositionalHitsoundsLevel => globalGameplaySettings.PositionalHitsoundsLevel;
+
+        //It complains if i don't do this
+
+        IBindable<bool> IGameplaySettings.PitchShiftHitsounds => globalGameplaySettings.PitchShiftHitsounds;
+        IBindable<float> IGameplaySettings.PitchShiftMinHitError => globalGameplaySettings.PitchShiftMinHitError;
+        IBindable<float> IGameplaySettings.PitchShiftMaxHitError => globalGameplaySettings.PitchShiftMaxHitError;
+        IBindable<float> IGameplaySettings.PitchShiftRange => globalGameplaySettings.PitchShiftRange;
     }
 }

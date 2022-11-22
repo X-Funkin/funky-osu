@@ -61,8 +61,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
         private double floatingAverage;
 
-        private (HitResult result, double length)[] hitWindows;
-        private (HitResult result, double length)[] displayHitWindows;
+        // private (HitResult result, double length)[] hitWindows;
         private readonly DrawablePool<JudgementLine> judgementLinePool = new DrawablePool<JudgementLine>(50);
 
         private SpriteIcon arrow = null!;
@@ -78,6 +77,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         private Container arrowContainer = null!;
 
         private (HitResult result, double length)[] hitWindows = null!;
+        private (HitResult result, double length)[] displayHitWindows = null!;
 
         private Drawable[]? centreMarkerDrawables;
 
@@ -378,7 +378,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
                     break;
                 case LabelStyles.HitWindow:
-                    labelEarly = new UprightAspectMaintainingContainer
+                    labelEarly.Child = new OsuSpriteText
                     {
                         Y = -10,
                         Text = $@"-{maxHitWindow:N2}ms",
@@ -388,7 +388,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                         Origin = Anchor.Centre,
                     };
 
-                    labelLate = new UprightAspectMaintainingContainer
+                    labelLate.Child = new OsuSpriteText
                     {
                         Y = 10,
                         Text = $@"{maxHitWindow:N2}ms",

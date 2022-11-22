@@ -130,6 +130,10 @@ namespace osu.Game.Rulesets.Objects.Drawables
         private readonly Bindable<int> comboIndexBindable = new Bindable<int>();
 
         private readonly IBindable<float> positionalHitsoundsLevel = new Bindable<float>();
+        private readonly IBindable<bool> pitchShiftHitsounds = new Bindable<bool>();
+        private readonly IBindable<float> pitchShiftMinHitError = new Bindable<float>();
+        private readonly IBindable<float> pitchShiftMaxHitError = new Bindable<float>();
+        private readonly IBindable<float> pitchShiftRange = new Bindable<float>();
         private readonly IBindable<float> comboColourBrightness = new Bindable<float>();
         private readonly Bindable<int> comboIndexWithOffsetsBindable = new Bindable<int>();
 
@@ -175,6 +179,10 @@ namespace osu.Game.Rulesets.Objects.Drawables
         {
             positionalHitsoundsLevel.BindTo(gameplaySettings.PositionalHitsoundsLevel);
             comboColourBrightness.BindTo(gameplaySettings.ComboColourNormalisationAmount);
+            pitchShiftHitsounds.BindTo(gameplaySettings.PitchShiftHitsounds);
+            pitchShiftMinHitError.BindTo(gameplaySettings.PitchShiftMinHitError);
+            pitchShiftMaxHitError.BindTo(gameplaySettings.PitchShiftMaxHitError);
+            pitchShiftRange.BindTo(gameplaySettings.PitchShiftRange);
 
             // Explicit non-virtual function call in case a DrawableHitObject overrides AddInternal.
             base.AddInternal(Samples = new PausableSkinnableSound());
