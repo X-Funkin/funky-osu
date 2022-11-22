@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
@@ -37,6 +38,8 @@ namespace osu.Game.Rulesets.Osu.UI
         private readonly JudgementContainer<DrawableOsuJudgement> judgementLayer;
 
         public FollowPointRenderer FollowPoints { get; }
+
+        public Bindable<bool> EnableComboGuides = new Bindable<bool>(true);
 
         public static readonly Vector2 BASE_SIZE = new Vector2(512, 384);
 
@@ -117,7 +120,10 @@ namespace osu.Game.Rulesets.Osu.UI
         private void load(OsuRulesetConfigManager config, IBeatmap beatmap)
         {
             config?.BindWith(OsuRulesetSetting.PlayfieldBorderStyle, playfieldBorder.PlayfieldBorderStyle);
-
+            // config?.BindWith()
+            config?.BindWith(OsuRulesetSetting.ComboGuides,EnableComboGuides);
+            EnableComboGuides.BindValueChanged(enabled => FollowPoints.Alpha = enabled.NewValue? 1:0, true);
+            // FollowPoints.Alpha = 0;
             var osuBeatmap = (OsuBeatmap)beatmap;
 
             RegisterPool<HitCircle, DrawableHitCircle>(20, 100);

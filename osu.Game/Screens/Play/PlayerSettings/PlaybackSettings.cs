@@ -17,9 +17,9 @@ namespace osu.Game.Screens.Play.PlayerSettings
 
         public readonly Bindable<double> UserPlaybackRate = new BindableDouble(1)
         {
-            MinValue = 0.5,
-            MaxValue = 2,
-            Precision = 0.1,
+            MinValue = 0.1,
+            MaxValue = 3.0,
+            Precision = 0.5,
         };
 
         private readonly PlayerSliderBar<double> rateSlider;
@@ -42,7 +42,7 @@ namespace osu.Game.Screens.Play.PlayerSettings
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft,
-                            Text = "Playback speed",
+                            Text = "Playback speed yo\nmy husband is walter white yo\nuh huh\nhe told me everything",
                         },
                         multiplierText = new OsuSpriteText
                         {

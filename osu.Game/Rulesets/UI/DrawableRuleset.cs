@@ -110,6 +110,8 @@ namespace osu.Game.Rulesets.UI
         /// </remarks>
         public IAdjustableAudioComponent Audio { get; private set; }
 
+        public Bindable<double> thisBalance = new Bindable<double>(-1.0);
+
         /// <summary>
         /// Creates a ruleset visualisation for the provided ruleset and beatmap.
         /// </summary>
@@ -193,6 +195,9 @@ namespace osu.Game.Rulesets.UI
             };
 
             Audio = audioContainer;
+            // Audio.Balance = -1;
+            // Audio.AddAdjustment(AdjustableProperty.Balance, thisBalance);
+            
 
             if ((ResumeOverlay = CreateResumeOverlay()) != null)
             {

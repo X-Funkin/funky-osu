@@ -33,7 +33,40 @@ namespace osu.Game.Overlays.Settings.Sections.Gameplay
                     ClassicDefault = false,
                     LabelText = GameplaySettingsStrings.AlwaysPlayFirstComboBreak,
                     Current = config.GetBindable<bool>(OsuSetting.AlwaysPlayFirstComboBreak)
-                }
+                },
+                new SettingsCheckbox
+                {
+                    ClassicDefault = false,
+                    LabelText = GameplaySettingsStrings.AlwaysPlayComboBreak,
+                    Current = config.GetBindable<bool>(OsuSetting.AlwaysPlayComboBreak)
+                },
+                new SettingsCheckbox
+                {
+                    ClassicDefault = false,
+                    LabelText = GameplaySettingsStrings.PitchShiftHitsounds,
+                    Current = config.GetBindable<bool>(OsuSetting.PitchShiftHitsounds)
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = GameplaySettingsStrings.PitchShiftMinHitError,
+                    Current = osuConfig.GetBindable<float>(OsuSetting.PitchShiftMinHitError),
+                    KeyboardStep = 1.0f
+
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = GameplaySettingsStrings.PitchShiftMaxHitError,
+                    Current = osuConfig.GetBindable<float>(OsuSetting.PitchShiftMaxHitError),
+                    KeyboardStep = 1.0f
+
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = GameplaySettingsStrings.PitchShiftRange,
+                    Current = osuConfig.GetBindable<float>(OsuSetting.PitchShiftRange),
+                    KeyboardStep = 1.0f
+
+                },
             };
         }
     }

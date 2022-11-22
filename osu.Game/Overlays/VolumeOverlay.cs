@@ -39,7 +39,7 @@ namespace osu.Game.Overlays
         private SelectionCycleFillFlowContainer<VolumeMeter> volumeMeters;
 
         [BackgroundDependencyLoader]
-        private void load(AudioManager audio, OsuColour colours)
+        private void load(AudioManager audio, OsuColour colours) 
         {
             AutoSizeAxes = Axes.X;
             RelativeSizeAxes = Axes.Y;

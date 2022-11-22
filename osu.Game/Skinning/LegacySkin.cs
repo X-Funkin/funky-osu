@@ -399,7 +399,10 @@ namespace osu.Game.Skinning
 
                 case GameplaySkinComponent<JudgementResult> resultComponent:
                     //lmaooo just a copy of the top because i don't want to worry about standard early/late judgements
-                    Func<Drawable?> ncreateDrawable = () => getJudgementAnimation(resultComponent.Component.Type);
+                    // Func<Drawable?> ncreateDrawable = () => getJudgementAnimation(resultComponent.Component.Type);
+                    //it's time
+                    //TO WORRY ABOUT STANDARD EARLY/LATE JUDGEMENTS LET'S GO
+                    Func<Drawable?> ncreateDrawable = () => getEarlyLateJudgementAnimation(resultComponent.Component);
 
                     // kind of wasteful that we throw this away, but should do for now.
                     if (ncreateDrawable() != null)
@@ -440,6 +443,68 @@ namespace osu.Game.Skinning
             return null;
         }
 
+        private Drawable? getEarlyLateJudgementAnimation(JudgementResult result)
+        {
+            bool early = (result.TimeOffset<=0);
+            Drawable? animation = null;
+            switch(result.Type)
+            {
+                case HitResult.Miss:
+                    if(early)
+                    {
+                        animation = this.GetAnimation("hit0early", true, false);
+                    }
+                    else{
+                        animation = this.GetAnimation("hit0late", true, false);
+                    }
+                    if(animation == null){
+                        animation = this.GetAnimation("hit0", true, false);
+                    }
+                    return animation;
+
+                case HitResult.Meh:
+                    if(early)
+                    {
+                        animation = this.GetAnimation("hit50early", true, false);
+                    }
+                    else{
+                        animation = this.GetAnimation("hit50late", true, false);
+                    }
+                    if(animation == null){
+                        animation = this.GetAnimation("hit50", true, false);
+                    }
+                    return animation;
+
+                case HitResult.Ok:
+                    if(early)
+                    {
+                        animation = this.GetAnimation("hit100early", true, false);
+                    }
+                    else{
+                        animation = this.GetAnimation("hit100late", true, false);
+                    }
+                    if(animation == null){
+                        animation = this.GetAnimation("hit100", true, false);
+                    }
+                    return animation;
+
+                case HitResult.Great:
+                    if(early)
+                    {
+                        animation = this.GetAnimation("hit300early", true, false);
+                    }
+                    else{
+                        animation = this.GetAnimation("hit300late", true, false);
+                    }
+                    if(animation == null){
+                        animation = this.GetAnimation("hit300", true, false);
+                    }
+                    return animation;
+            }
+
+            return null;
+        }
+
         private Drawable? getJudgementAnimation(HitResult result)
         {
             switch (result)
@@ -454,7 +519,7 @@ namespace osu.Game.Skinning
                     return this.GetAnimation("hit100", true, false);
 
                 case HitResult.Great:
-                    return this.GetAnimation("hit300", true, false);
+                    return this.GetAnimation("mania-hit300", true, false);
             }
 
             return null;

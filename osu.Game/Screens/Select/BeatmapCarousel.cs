@@ -398,31 +398,39 @@ namespace osu.Game.Screens.Select
         {
             // ensure that any pending events from BeatmapManager have been run before attempting a selection.
             Scheduler.Update();
+            // beatmapInfo.StarRating;
 
             //your mom
-            if (UseCoolSorting.Value || true){
-
-                int maxdiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating+0.2);
-                int mindiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating-0.2);
-                if (maxdiffindex<0){
-                    maxdiffindex = ~maxdiffindex;
-                }
-                if (mindiffindex<0){
-                    mindiffindex = ~mindiffindex;
-                }
-
-                maxdiffindex = Math.Clamp(maxdiffindex+1,0,starDifficulties.Count);
-                mindiffindex = Math.Clamp(mindiffindex-1,0,starDifficulties.Count);
-                activeCriteria.StarDifficulty.Max = (double) starDifficulties[maxdiffindex];
-                activeCriteria.StarDifficulty.Min = (double) starDifficulties[mindiffindex];
-                activeCriteria.UserStarDifficulty.Max = (double) starDifficulties[maxdiffindex];
-                activeCriteria.UserStarDifficulty.Min = (double) starDifficulties[mindiffindex];
-                
-
-                Logger.Log(@$"New Star Diff is {beatmapInfo.StarRating}, max={(double) starDifficulties[maxdiffindex]}, min={(double) starDifficulties[mindiffindex]}");
-                Logger.Log(@$"But did it work?? {activeCriteria.StarDifficulty.Max}, {activeCriteria.StarDifficulty.Min} and player {activeCriteria.UserStarDifficulty.Max},{activeCriteria.UserStarDifficulty.Min}");
+            if (beatmapInfo != null){
+                activeCriteria.StarDifficulty.Max = beatmapInfo.StarRating+0.2;
+                activeCriteria.StarDifficulty.Min = beatmapInfo.StarRating-0.2;
+                activeCriteria.UserStarDifficulty.Max = beatmapInfo.StarRating+0.2;
+                activeCriteria.UserStarDifficulty.Min = beatmapInfo.StarRating-0.2;
                 applyActiveCriteria(false);
             }
+            // if (UseCoolSorting.Value || true){
+
+            //     int maxdiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating+0.2);
+            //     int mindiffindex = starDifficulties.BinarySearch(beatmapInfo.StarRating-0.2);
+            //     if (maxdiffindex<0){
+            //         maxdiffindex = ~maxdiffindex;
+            //     }
+            //     if (mindiffindex<0){
+            //         mindiffindex = ~mindiffindex;
+            //     }
+
+            //     maxdiffindex = Math.Clamp(maxdiffindex+1,0,starDifficulties.Count);
+            //     mindiffindex = Math.Clamp(mindiffindex-1,0,starDifficulties.Count);
+            //     activeCriteria.StarDifficulty.Max = (double) starDifficulties[maxdiffindex];
+            //     activeCriteria.StarDifficulty.Min = (double) starDifficulties[mindiffindex];
+            //     activeCriteria.UserStarDifficulty.Max = (double) starDifficulties[maxdiffindex];
+            //     activeCriteria.UserStarDifficulty.Min = (double) starDifficulties[mindiffindex];
+                
+
+            //     Logger.Log(@$"New Star Diff is {beatmapInfo.StarRating}, max={(double) starDifficulties[maxdiffindex]}, min={(double) starDifficulties[mindiffindex]}");
+            //     Logger.Log(@$"But did it work?? {activeCriteria.StarDifficulty.Max}, {activeCriteria.StarDifficulty.Min} and player {activeCriteria.UserStarDifficulty.Max},{activeCriteria.UserStarDifficulty.Min}");
+            //     applyActiveCriteria(false);
+            // }
             if (beatmapInfo?.Hidden != false)
                 return false;
 

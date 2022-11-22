@@ -3,12 +3,14 @@
 
 #nullable disable
 
+using System;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Audio;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Skinning;
 
 namespace osu.Game.Screens.Play
@@ -20,6 +22,8 @@ namespace osu.Game.Screens.Play
         private SkinnableSound comboBreakSample;
 
         private Bindable<bool> alwaysPlayFirst;
+
+        private Bindable<bool> alwaysPlay;
 
         private double? firstBreakTime;
 
@@ -33,12 +37,14 @@ namespace osu.Game.Screens.Play
         {
             InternalChild = comboBreakSample = new SkinnableSound(new SampleInfo("Gameplay/combobreak"));
             alwaysPlayFirst = config.GetBindable<bool>(OsuSetting.AlwaysPlayFirstComboBreak);
+            alwaysPlay  = config.GetBindable<bool>(OsuSetting.AlwaysPlayComboBreak);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
             processor.Combo.BindValueChanged(onComboChange);
+            processor.NewJudgement += onNewJudgement;
         }
 
         [Resolved(canBeNull: true)]
@@ -56,7 +62,7 @@ namespace osu.Game.Screens.Play
             if (gameplayClock.ElapsedFrameTime < 0)
                 return;
 
-            if (combo.NewValue == 0 && (combo.OldValue > 20 || (alwaysPlayFirst.Value && firstBreakTime == null)))
+            if (combo.NewValue == 0 && (combo.OldValue > 20 || (alwaysPlayFirst.Value && firstBreakTime == null) || alwaysPlay.Value))
             {
                 firstBreakTime = gameplayClock.CurrentTime;
 
@@ -65,8 +71,25 @@ namespace osu.Game.Screens.Play
                 if (samplePlaybackDisabler?.SamplePlaybackDisabled.Value == true)
                     return;
 
+                // comboBreakSample?.Play();
+            }
+        }
+
+        private void onNewJudgement(JudgementResult judgement){
+            if(judgement.Type.BreaksCombo()){
+                if (samplePlaybackDisabler?.SamplePlaybackDisabled.Value == true)
+                    return;
+                // comboBreakSample?.Balance = Math.Sign(judgement.TimeOffset); 
+                comboBreakSample?.Balance.Set(Math.Sign(judgement.TimeOffset)/2.0);
                 comboBreakSample?.Play();
             }
+        }
+
+        protected override void Dispose(bool isDisposing){
+            base.Dispose(isDisposing);
+
+            if(processor != null)
+                processor.NewJudgement -= onNewJudgement;
         }
     }
 }

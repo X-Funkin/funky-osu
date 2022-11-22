@@ -15,6 +15,7 @@ using osu.Framework.Extensions.TypeExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Threading;
+using osu.Framework.Utils;
 using osu.Game.Audio;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Judgements;
@@ -128,6 +129,11 @@ namespace osu.Game.Rulesets.Objects.Drawables
         private readonly Bindable<int> comboIndexBindable = new Bindable<int>();
 
         private readonly Bindable<float> positionalHitsoundsLevel = new Bindable<float>();
+
+        private readonly Bindable<bool> pitchShiftHitsounds = new Bindable<bool>();
+        private readonly Bindable<float> pitchShiftMaxHitError = new Bindable<float>();
+        private readonly Bindable<float> pitchShiftMinHitError = new Bindable<float>();
+        private readonly Bindable<float> pitchShiftRange = new Bindable<float>();
         private readonly Bindable<int> comboIndexWithOffsetsBindable = new Bindable<int>();
 
         protected override bool RequiresChildrenUpdate => true;
@@ -171,6 +177,10 @@ namespace osu.Game.Rulesets.Objects.Drawables
         private void load(OsuConfigManager config, ISkinSource skinSource)
         {
             config.BindWith(OsuSetting.PositionalHitsoundsLevel, positionalHitsoundsLevel);
+            config.BindWith(OsuSetting.PitchShiftHitsounds, pitchShiftHitsounds);
+            config.BindWith(OsuSetting.PitchShiftMinHitError, pitchShiftMinHitError);
+            config.BindWith(OsuSetting.PitchShiftMaxHitError, pitchShiftMaxHitError);
+            config.BindWith(OsuSetting.PitchShiftRange, pitchShiftRange);
 
             // Explicit non-virtual function call in case a DrawableHitObject overrides AddInternal.
             base.AddInternal(Samples = new PausableSkinnableSound());
@@ -543,6 +553,19 @@ namespace osu.Game.Rulesets.Objects.Drawables
             return returnedValue;
         }
 
+        //POV: no built in solution
+        private static float mapRange(float value, float fromLow, float fromHigh, float toLow, float toHigh)
+        {
+            return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+        }
+        protected double CalculateSamplePlaybackPitch(double hit_time){
+            if (!pitchShiftHitsounds.Value){return 1.0;}
+            double halfSteps = mapRange(Math.Abs((float)hit_time),pitchShiftMinHitError.Value,pitchShiftMaxHitError.Value,0.0f,pitchShiftRange.Value);
+            halfSteps = Math.Clamp(halfSteps,0.0,pitchShiftRange.Value);
+            double pitch = halfSteps/12.0*Math.Sign(hit_time);
+            return Math.Pow(2.0,-pitch);
+        }
+
         /// <summary>
         /// Plays all the hit sounds for this <see cref="DrawableHitObject"/>.
         /// This is invoked automatically when this <see cref="DrawableHitObject"/> is hit.
@@ -552,6 +575,8 @@ namespace osu.Game.Rulesets.Objects.Drawables
             if (Samples != null)
             {
                 Samples.Balance.Value = CalculateSamplePlaybackBalance(SamplePlaybackPosition);
+                // Samples.Frequency.Value = 2.0;
+                Samples.Frequency.Value = CalculateSamplePlaybackPitch(Result.TimeOffset);
                 Samples.Play();
             }
         }

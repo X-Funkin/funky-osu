@@ -49,7 +49,13 @@ namespace osu.Game.Rulesets.Osu.UI
                     LabelText = "Playfield border style",
                     Current = config.GetBindable<PlayfieldBorderStyle>(OsuRulesetSetting.PlayfieldBorderStyle),
                 },
+                new SettingsCheckbox
+                {
+                    LabelText = "Combo Guides",
+                    Current = config.GetBindable<bool>(OsuRulesetSetting.ComboGuides),
+                },
             };
         }
     }
 }
+ 

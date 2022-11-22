@@ -90,6 +90,27 @@ namespace osu.Game.Localisation
         public static LocalisableString AlwaysPlayFirstComboBreak => new TranslatableString(getKey(@"always_play_first_combo_break"), @"Always play first combo break sound");
 
         /// <summary>
+        /// "Always play combo break sound"
+        /// </summary>
+        public static LocalisableString AlwaysPlayComboBreak => new TranslatableString(getKey(@"always_play_combo_break"), @"Always play combo break sound");
+        /// <summary>
+        /// "Pitch-Shift Hitsounds"
+        /// </summary>
+        public static LocalisableString PitchShiftHitsounds => new TranslatableString(getKey(@"pitch_shift_hit_sounds"), @"Pitch-Shift Hitsounds");
+        /// <summary>
+        /// "Pitch-Shift Minimum Hit Error"
+        /// </summary>
+        public static LocalisableString PitchShiftMinHitError => new TranslatableString(getKey(@"pitch_shift_min_hit_error"), @"Pitch-Shift Minimum Hit Error");
+        /// <summary>
+        /// "Pitch-Shift Maximum Hit Error"
+        /// </summary>
+        public static LocalisableString PitchShiftMaxHitError => new TranslatableString(getKey(@"pitch_shift_max_hit_error"), @"Pitch-Shift Maximum Hit Error");
+        /// <summary>
+        /// "Pitch-Shift Range"
+        /// </summary>
+        public static LocalisableString PitchShiftRange => new TranslatableString(getKey(@"pitch_shift_range"), @"Pitch-Shift Range");
+
+        /// <summary>
         /// "Score display mode"
         /// </summary>
         public static LocalisableString ScoreDisplayMode => new TranslatableString(getKey(@"score_display_mode"), @"Score display mode");

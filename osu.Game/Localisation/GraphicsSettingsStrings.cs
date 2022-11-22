@@ -104,6 +104,9 @@ namespace osu.Game.Localisation
         /// </summary>
         public static LocalisableString HitLighting => new TranslatableString(getKey(@"hit_lighting"), @"Hit lighting");
 
+
+
+
         /// <summary>
         /// "Screenshots"
         /// </summary>

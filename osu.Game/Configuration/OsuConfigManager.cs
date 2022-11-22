@@ -121,11 +121,17 @@ namespace osu.Game.Configuration
             // Gameplay
             SetDefault(OsuSetting.PositionalHitsounds, true); // replaced by level setting below, can be removed 20220703.
             SetDefault(OsuSetting.PositionalHitsoundsLevel, 0.2f, 0, 1);
+            SetDefault(OsuSetting.PitchShiftHitsounds, false);
+            SetDefault(OsuSetting.PitchShiftMinHitError, 10.0f, 0f, 100f, 1);
+            SetDefault(OsuSetting.PitchShiftMaxHitError, 100.0f, 0f, 100f, 1);
+            SetDefault(OsuSetting.PitchShiftRange, 12.0f, 0f, 24f, 1);
             SetDefault(OsuSetting.DimLevel, 0.8, 0, 1, 0.01);
             SetDefault(OsuSetting.BlurLevel, 0, 0, 1, 0.01);
             SetDefault(OsuSetting.LightenDuringBreaks, true);
 
             SetDefault(OsuSetting.HitLighting, true);
+            // SetDefault(OsuSetting.ComboGuides, true);
+
 
             SetDefault(OsuSetting.HUDVisibilityMode, HUDVisibilityMode.Always);
             SetDefault(OsuSetting.ShowProgressGraph, true);
@@ -134,6 +140,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.KeyOverlay, false);
             SetDefault(OsuSetting.GameplayLeaderboard, true);
             SetDefault(OsuSetting.AlwaysPlayFirstComboBreak, true);
+            SetDefault(OsuSetting.AlwaysPlayComboBreak, false);
 
             SetDefault(OsuSetting.FloatingComments, false);
 
@@ -296,10 +303,18 @@ namespace osu.Game.Configuration
         LightenDuringBreaks,
         ShowStoryboard,
         KeyOverlay,
+        // ComboGuides,
         GameplayLeaderboard,
         PositionalHitsounds,
         PositionalHitsoundsLevel,
+        PitchShiftHitsounds,
+        PitchShiftMaxHitError,
+        PitchShiftMinHitError,
+        PitchShiftRange,
+        
         AlwaysPlayFirstComboBreak,
+
+        AlwaysPlayComboBreak,
         FloatingComments,
         HUDVisibilityMode,
 
