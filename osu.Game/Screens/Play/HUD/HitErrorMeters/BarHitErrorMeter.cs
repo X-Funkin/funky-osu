@@ -1,8 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-#nullable disable
-
 using System;
 using System.Linq;
 using osu.Framework.Allocation;
@@ -11,10 +9,12 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
+using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Rulesets.Scoring;
@@ -24,10 +24,9 @@ using osu.Framework.Logging;
 
 namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 {
+    [Cached]
     public class BarHitErrorMeter : HitErrorMeter
     {
-        private const int judgement_line_width = 14;
-
         [SettingSource("Judgement line thickness", "How thick the individual lines should be.")]
         public BindableNumber<float> JudgementLineThickness { get; } = new BindableNumber<float>(4)
         {
@@ -48,30 +47,39 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         [SettingSource("Display Max Judgement", "Maximum Judgement that's displayed on the bar yo")]
         public Bindable<DisplayMaxJudgements> DisplayMaxJudgement { get; } = new Bindable<DisplayMaxJudgements>(DisplayMaxJudgements.Meh);
 
-        private SpriteIcon arrow;
-        private Drawable labelEarly;
-        private Drawable labelLate;
+        // private SpriteIcon arrow;
+        // private Drawable labelEarly;
+        // private Drawable labelLate;
+        private const int judgement_line_width = 14;
 
-        private Container colourBarsEarly;
-        private Container colourBarsLate;
+        private const int max_concurrent_judgements = 50;
 
-        private Container judgementsContainer;
+        private const int centre_marker_size = 8;
 
         private double maxHitWindow;
         // private double maxDisplayHitWindow;
 
         private double floatingAverage;
-        private Container colourBars;
-        private Container arrowContainer;
 
         private (HitResult result, double length)[] hitWindows;
         private (HitResult result, double length)[] displayHitWindows;
+        private readonly DrawablePool<JudgementLine> judgementLinePool = new DrawablePool<JudgementLine>(50);
 
-        private const int max_concurrent_judgements = 50;
+        private SpriteIcon arrow = null!;
+        private UprightAspectMaintainingContainer labelEarly = null!;
+        private UprightAspectMaintainingContainer labelLate = null!;
 
-        private Drawable[] centreMarkerDrawables;
+        private Container colourBarsEarly = null!;
+        private Container colourBarsLate = null!;
 
-        private const int centre_marker_size = 8;
+        private Container judgementsContainer = null!;
+
+        private Container colourBars = null!;
+        private Container arrowContainer = null!;
+
+        private (HitResult result, double length)[] hitWindows = null!;
+
+        private Drawable[]? centreMarkerDrawables;
 
         public BarHitErrorMeter()
         {
@@ -94,6 +102,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                 Margin = new MarginPadding(2),
                 Children = new Drawable[]
                 {
+                    judgementLinePool,
                     colourBars = new Container
                     {
                         Name = "colour axis",
@@ -128,6 +137,20 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                                 Origin = Anchor.TopCentre,
                                 RelativeSizeAxes = Axes.Y,
                                 Width = judgement_line_width,
+                            },
+                            labelEarly = new UprightAspectMaintainingContainer
+                            {
+                                AutoSizeAxes = Axes.Both,
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.Centre,
+                                Y = -10,
+                            },
+                            labelLate = new UprightAspectMaintainingContainer
+                            {
+                                AutoSizeAxes = Axes.Both,
+                                Anchor = Anchor.BottomCentre,
+                                Origin = Anchor.Centre,
+                                Y = 10,
                             },
                         }
                     },
@@ -316,62 +339,46 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
         {
             const float icon_size = 14;
 
-            labelEarly?.Expire();
-            labelEarly = null;
-
-            labelLate?.Expire();
-            labelLate = null;
-
             switch (style)
             {
                 case LabelStyles.None:
+                    labelEarly.Clear();
+                    labelLate.Clear();
                     break;
 
                 case LabelStyles.Icons:
-                    labelEarly = new SpriteIcon
+                    labelEarly.Child = new SpriteIcon
                     {
-                        Y = -10,
                         Size = new Vector2(icon_size),
                         Icon = FontAwesome.Solid.ShippingFast,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
                     };
 
-                    labelLate = new SpriteIcon
+                    labelLate.Child = new SpriteIcon
                     {
-                        Y = 10,
                         Size = new Vector2(icon_size),
                         Icon = FontAwesome.Solid.Bicycle,
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.Centre,
                     };
 
                     break;
 
                 case LabelStyles.Text:
-                    labelEarly = new OsuSpriteText
+                    labelEarly.Child = new OsuSpriteText
                     {
-                        Y = -10,
                         Text = "Early",
                         Font = OsuFont.Default.With(size: 10),
                         Height = 12,
-                        Anchor = Anchor.TopCentre,
-                        Origin = Anchor.Centre,
                     };
 
-                    labelLate = new OsuSpriteText
+                    labelLate.Child = new OsuSpriteText
                     {
-                        Y = 10,
                         Text = "Late",
                         Font = OsuFont.Default.With(size: 10),
                         Height = 12,
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.Centre,
                     };
 
                     break;
                 case LabelStyles.HitWindow:
-                    labelEarly = new OsuSpriteText
+                    labelEarly = new UprightAspectMaintainingContainer
                     {
                         Y = -10,
                         Text = $@"-{maxHitWindow:N2}ms",
@@ -381,7 +388,7 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                         Origin = Anchor.Centre,
                     };
 
-                    labelLate = new OsuSpriteText
+                    labelLate = new UprightAspectMaintainingContainer
                     {
                         Y = 10,
                         Text = $@"{maxHitWindow:N2}ms",
@@ -398,26 +405,8 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                     throw new ArgumentOutOfRangeException(nameof(style), style, null);
             }
 
-            if (labelEarly != null)
-            {
-                colourBars.Add(labelEarly);
-                labelEarly.FadeInFromZero(500);
-            }
-
-            if (labelLate != null)
-            {
-                colourBars.Add(labelLate);
-                labelLate.FadeInFromZero(500);
-            }
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
-            // undo any layout rotation to display icons in the correct orientation
-            if (labelEarly != null) labelEarly.Rotation = -Rotation;
-            if (labelLate != null) labelLate.Rotation = -Rotation;
+            labelEarly.FadeInFromZero(500);
+            labelLate.FadeInFromZero(500);
         }
 
         private void createColourBars((HitResult result, double length)[] windows)
@@ -501,25 +490,12 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
                 }
             }
 
-            //add sum funky animations
-
-            // const double bounce_time = 60;
-            // JudgementLine n_line_yeah = new JudgementLine
-            // {
-            //     JudgementLineThickness = { BindTarget = JudgementLineThickness },
-            //     Y = getRelativeJudgementPosition(judgement.TimeOffset),
-            //     Colour = GetColourForHitResult(judgement.Type),
-                
-                
-            // };
-
-            judgementsContainer.Add(new JudgementLine
+            judgementLinePool.Get(drawableJudgement =>
             {
-                JudgementLineThickness = { BindTarget = JudgementLineThickness },
-                Y = getRelativeJudgementPosition(judgement.TimeOffset),
-                Colour = GetColourForHitResult(judgement.Type),
-                
-                
+                drawableJudgement.Y = getRelativeJudgementPosition(judgement.TimeOffset);
+                drawableJudgement.Colour = GetColourForHitResult(judgement.Type);
+
+                judgementsContainer.Add(drawableJudgement);
             });
 
             arrow.MoveToY(
@@ -529,9 +505,12 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
         private float getRelativeJudgementPosition(double value) => Math.Clamp((float)((value / maxHitWindow) + 1) / 2, 0, 1);
 
-        internal class JudgementLine : CompositeDrawable
+        internal class JudgementLine : PoolableDrawable
         {
             public readonly BindableNumber<float> JudgementLineThickness = new BindableFloat();
+
+            [Resolved]
+            private BarHitErrorMeter barHitErrorMeter { get; set; } = null!;
 
             public JudgementLine()
             {
@@ -551,16 +530,22 @@ namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 
             protected override void LoadComplete()
             {
+                base.LoadComplete();
+
+                JudgementLineThickness.BindTo(barHitErrorMeter.JudgementLineThickness);
+                JudgementLineThickness.BindValueChanged(thickness => Height = thickness.NewValue, true);
+            }
+
+            protected override void PrepareForUse()
+            {
+                base.PrepareForUse();
+
                 const int judgement_fade_in_duration = 100*0;
                 const int judgement_fade_out_duration = 5000;
                 const int judgement_bounce_in_duration = 100;
 
-                base.LoadComplete();
-
                 Alpha = 0;
                 Width = 2.0f;
-
-                JudgementLineThickness.BindValueChanged(thickness => Height = thickness.NewValue, true);
 
                 this
                     .FadeTo(0.6f, judgement_fade_in_duration, Easing.OutQuint)

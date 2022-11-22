@@ -37,6 +37,7 @@ namespace osu.Game.Rulesets.Osu.UI
         private readonly ProxyContainer spinnerProxies;
         private readonly JudgementContainer<DrawableOsuJudgement> judgementLayer;
 
+        public SmokeContainer Smoke { get; }
         public FollowPointRenderer FollowPoints { get; }
 
         public Bindable<bool> EnableComboGuides = new Bindable<bool>(true);
@@ -57,6 +58,7 @@ namespace osu.Game.Rulesets.Osu.UI
             InternalChildren = new Drawable[]
             {
                 playfieldBorder = new PlayfieldBorder { RelativeSizeAxes = Axes.Both },
+                Smoke = new SmokeContainer { RelativeSizeAxes = Axes.Both },
                 spinnerProxies = new ProxyContainer { RelativeSizeAxes = Axes.Both },
                 FollowPoints = new FollowPointRenderer { RelativeSizeAxes = Axes.Both },
                 judgementLayer = new JudgementContainer<DrawableOsuJudgement> { RelativeSizeAxes = Axes.Both },

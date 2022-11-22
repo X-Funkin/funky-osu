@@ -3,6 +3,7 @@
 
 #nullable disable
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Beatmaps;
@@ -62,6 +63,19 @@ namespace osu.Game.Rulesets.Mania.Beatmaps
                     Content = @$"{holdNotes} ({ratio*100:N0}%)", //i know {:P0} but i don't like the space (2 %) and this is faster than looking it up
                 },
             };
+        }
+
+        public StageDefinition GetStageForColumnIndex(int column)
+        {
+            foreach (var stage in Stages)
+            {
+                if (column < stage.Columns)
+                    return stage;
+
+                column -= stage.Columns;
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(column), "Provided index exceeds all available stages");
         }
     }
 }

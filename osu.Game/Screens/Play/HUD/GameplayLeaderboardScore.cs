@@ -3,6 +3,7 @@
 
 #nullable disable
 
+using System;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -39,8 +40,6 @@ namespace osu.Game.Screens.Play.HUD
 
         private const float rank_text_width = 35f;
 
-        private const float score_components_width = 85f;
-
         private const float avatar_size = 25f;
 
         private const double panel_transition_duration = 500;
@@ -51,7 +50,7 @@ namespace osu.Game.Screens.Play.HUD
 
         private OsuSpriteText positionText, scoreText, accuracyText, comboText, usernameText;
 
-        public BindableDouble TotalScore { get; } = new BindableDouble();
+        public BindableLong TotalScore { get; } = new BindableLong();
         public BindableDouble Accuracy { get; } = new BindableDouble(1);
         public BindableInt Combo { get; } = new BindableInt();
         public BindableBool HasQuit { get; } = new BindableBool();
@@ -63,20 +62,22 @@ namespace osu.Game.Screens.Play.HUD
 
         private int? scorePosition;
 
+        private bool scorePositionIsSet;
+
         public int? ScorePosition
         {
             get => scorePosition;
             set
             {
-                if (value == scorePosition)
+                // We always want to run once, as the incoming value may be null and require a visual update to "-".
+                if (value == scorePosition && scorePositionIsSet)
                     return;
 
                 scorePosition = value;
 
-                if (scorePosition.HasValue)
-                    positionText.Text = $"#{scorePosition.Value.FormatRank()}";
+                positionText.Text = scorePosition.HasValue ? $"#{scorePosition.Value.FormatRank()}" : "-";
+                scorePositionIsSet = true;
 
-                positionText.FadeTo(scorePosition.HasValue ? 1 : 0);
                 updateState();
             }
         }
@@ -161,7 +162,7 @@ namespace osu.Game.Screens.Play.HUD
                             {
                                 new Dimension(GridSizeMode.Absolute, rank_text_width),
                                 new Dimension(),
-                                new Dimension(GridSizeMode.AutoSize, maxSize: score_components_width),
+                                new Dimension(GridSizeMode.AutoSize),
                             },
                             Content = new[]
                             {
@@ -286,8 +287,19 @@ namespace osu.Game.Screens.Play.HUD
             LoadComponentAsync(new DrawableAvatar(User), avatarContainer.Add);
 
             TotalScore.BindValueChanged(v => scoreText.Text = v.NewValue.ToString("N0"), true);
-            Accuracy.BindValueChanged(v => accuracyText.Text = v.NewValue.FormatAccuracy(), true);
-            Combo.BindValueChanged(v => comboText.Text = $"{v.NewValue}x", true);
+
+            Accuracy.BindValueChanged(v =>
+            {
+                accuracyText.Text = v.NewValue.FormatAccuracy();
+                updateDetailsWidth();
+            }, true);
+
+            Combo.BindValueChanged(v =>
+            {
+                comboText.Text = $"{v.NewValue}x";
+                updateDetailsWidth();
+            }, true);
+
             HasQuit.BindValueChanged(_ => updateState());
         }
 
@@ -303,13 +315,10 @@ namespace osu.Game.Screens.Play.HUD
 
         private void changeExpandedState(ValueChangedEvent<bool> expanded)
         {
-            scoreComponents.ClearTransforms();
-
             if (expanded.NewValue)
             {
                 gridContainer.ResizeWidthTo(regular_width, panel_transition_duration, Easing.OutQuint);
 
-                scoreComponents.ResizeWidthTo(score_components_width, panel_transition_duration, Easing.OutQuint);
                 scoreComponents.FadeIn(panel_transition_duration, Easing.OutQuint);
 
                 usernameText.FadeIn(panel_transition_duration, Easing.OutQuint);
@@ -318,11 +327,29 @@ namespace osu.Game.Screens.Play.HUD
             {
                 gridContainer.ResizeWidthTo(compact_width, panel_transition_duration, Easing.OutQuint);
 
-                scoreComponents.ResizeWidthTo(0, panel_transition_duration, Easing.OutQuint);
                 scoreComponents.FadeOut(text_transition_duration, Easing.OutQuint);
 
                 usernameText.FadeOut(text_transition_duration, Easing.OutQuint);
             }
+
+            updateDetailsWidth();
+        }
+
+        private float? scoreComponentsTargetWidth;
+
+        private void updateDetailsWidth()
+        {
+            const float score_components_min_width = 88f;
+
+            float newWidth = Expanded.Value
+                ? Math.Max(score_components_min_width, comboText.DrawWidth + accuracyText.DrawWidth + 25)
+                : 0;
+
+            if (scoreComponentsTargetWidth == newWidth)
+                return;
+
+            scoreComponentsTargetWidth = newWidth;
+            scoreComponents.ResizeWidthTo(newWidth, panel_transition_duration, Easing.OutQuint);
         }
 
         private void updateState()

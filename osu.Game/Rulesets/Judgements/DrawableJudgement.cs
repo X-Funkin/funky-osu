@@ -183,12 +183,8 @@ namespace osu.Game.Rulesets.Judgements
             if (JudgementBody != null)
                 RemoveInternal(JudgementBody, true);
 
-            AddInternal(JudgementBody = new SkinnableDrawable(new GameplaySkinComponent<JudgementResult>(Result), _ =>
-                CreateDefaultJudgement(Result), confineMode: ConfineMode.NoScaling)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            });
+            AddInternal(JudgementBody = new SkinnableDrawable(new GameplaySkinComponentLookup<JudgementResult>(Result), _ =>
+                CreateDefaultJudgement(Result), confineMode: ConfineMode.NoScaling));
 
             JudgementBody.OnSkinChanged += () =>
             {

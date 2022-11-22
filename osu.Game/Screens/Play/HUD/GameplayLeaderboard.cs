@@ -124,7 +124,7 @@ namespace osu.Game.Screens.Play.HUD
             float fadeBottom = scroll.Current + scroll.DrawHeight;
             float fadeTop = scroll.Current + panel_height;
 
-            if (scroll.Current <= 0) fadeTop -= panel_height;
+            if (scroll.IsScrolledToStart()) fadeTop -= panel_height;
             if (!scroll.IsScrolledToEnd()) fadeBottom -= panel_height;
 
             // logic is mostly shared with Leaderboard, copied here for simplicity.
@@ -171,11 +171,13 @@ namespace osu.Game.Screens.Play.HUD
             for (int i = 0; i < Flow.Count; i++)
             {
                 Flow.SetLayoutPosition(orderedByScore[i], i);
-                orderedByScore[i].ScorePosition = i + 1;
+                orderedByScore[i].ScorePosition = CheckValidScorePosition(i + 1) ? i + 1 : null;
             }
 
             sorting.Validate();
         }
+
+        protected virtual bool CheckValidScorePosition(int i) => true;
 
         private class InputDisabledScrollContainer : OsuScrollContainer
         {
