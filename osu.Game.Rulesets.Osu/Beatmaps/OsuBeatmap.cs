@@ -18,6 +18,10 @@ namespace osu.Game.Rulesets.Osu.Beatmaps
             int circles = HitObjects.Count(c => c is HitCircle);
             int sliders = HitObjects.Count(s => s is Slider);
             int spinners = HitObjects.Count(s => s is Spinner);
+            int totalCircles = circles + sliders;
+
+            // L +
+            double ratio = (totalCircles == 0)? 0 : (double)sliders/totalCircles;
 
             return new[]
             {
@@ -30,7 +34,7 @@ namespace osu.Game.Rulesets.Osu.Beatmaps
                 new BeatmapStatistic
                 {
                     Name = BeatmapsetsStrings.ShowStatsCountSliders,
-                    Content = sliders.ToString(),
+                    Content = @$"{sliders} ({ratio*100:N0}%)", // i still don't like the look of {:P0}
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Sliders),
                 },
                 new BeatmapStatistic
