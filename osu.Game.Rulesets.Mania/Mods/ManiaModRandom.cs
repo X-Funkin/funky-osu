@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Mania.Mods
     {
         public override LocalisableString Description => @"Shuffle around the keys!";
 
-        public void ApplyToBeatmap(IBeatmap beatmap)
+        public void ApplyToBeatmap(IBeatmap beatmap) 
         {
             Seed.Value ??= RNG.Next();
             var rng = new Random((int)Seed.Value);

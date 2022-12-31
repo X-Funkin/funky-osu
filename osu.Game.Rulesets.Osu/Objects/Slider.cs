@@ -259,5 +259,8 @@ namespace osu.Game.Rulesets.Osu.Objects
         public override Judgement CreateJudgement() => OnlyJudgeNestedObjects ? new OsuIgnoreJudgement() : new OsuJudgement();
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;
+
+        public IList<HitSampleInfo> GetNodeSamples(int nodeIndex) =>
+            nodeIndex < NodeSamples?.Count ? NodeSamples[nodeIndex] : Samples;
     }
 }

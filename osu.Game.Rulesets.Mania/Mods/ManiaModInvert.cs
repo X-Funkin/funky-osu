@@ -13,7 +13,7 @@ using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Mania.Mods
-{
+{ 
     public class ManiaModInvert : Mod, IApplicableAfterBeatmapConversion
     {
         public override string Name => "Invert";
