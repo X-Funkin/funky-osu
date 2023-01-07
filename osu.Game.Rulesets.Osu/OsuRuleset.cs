@@ -173,10 +173,10 @@ namespace osu.Game.Rulesets.Osu
                         new OsuModTargetPractice(),
                         new OsuModDifficultyAdjust(),
                         new OsuModClassic(),
+                        new OsuModSlideless(),
                         new OsuModFlipJump(),
                         new OsuModRandom(),
                         new OsuModMirror(),
-                        new OsuModSlideless(),
                         new MultiMod(new OsuModAlternate(), new OsuModSingleTap())
                     };
 

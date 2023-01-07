@@ -35,7 +35,7 @@ namespace osu.Game.Screens.Select
 {
     public class BeatmapInfoWedge : VisibilityContainer
     {
-        public const float BORDER_THICKNESS = 2.5f;
+        public const float BORDER_THICKNESS = 2.5f; 
         private const float shear_width = 36.75f;
 
         private const float transition_duration = 250;
@@ -335,6 +335,12 @@ namespace osu.Game.Screens.Select
                 starDifficulty.BindValueChanged(s =>
                 {
                     starRatingDisplay.Current.Value = s.NewValue ?? default;
+                    starRatingDisplay.testMultiplier.Value = (s.NewValue ?? default).Stars/working.BeatmapInfo.StarRating;
+                    // starRatingDisplay.testMultiplier.Value = 69.0;
+                    // starRatingDisplay.BaseStars.Value = working.BeatmapInfo.StarRating;
+                    // starRatingDisplay.Current.Value = s.NewValue. ?? default;
+                    // starRatingDisplay.Current.Value = ;
+
 
                     // Don't roll the counter on initial display (but still allow it to roll on applying mods etc.)
                     if (!starRatingDisplay.IsPresent)

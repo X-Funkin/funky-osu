@@ -16,6 +16,7 @@ namespace osu.Game.Beatmaps
         /// </summary>
         public readonly double Stars;
 
+
         /// <summary>
         /// The maximum combo achievable on the given beatmap.
         /// </summary>

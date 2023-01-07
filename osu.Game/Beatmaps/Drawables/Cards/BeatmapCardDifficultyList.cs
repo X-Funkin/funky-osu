@@ -81,7 +81,7 @@ namespace osu.Game.Beatmaps.Drawables.Cards
                             icon.Anchor = icon.Origin = Anchor.CentreLeft;
                             icon.Size = new Vector2(16);
                         }),
-                        new StarRatingDisplay(new StarDifficulty(beatmapInfo.StarRating, 0), StarRatingDisplaySize.Small)
+                        new StarRatingDisplay(new StarDifficulty(beatmapInfo.StarRating+1.0, 0), StarRatingDisplaySize.Small)
                         {
                             Anchor = Anchor.CentreLeft,
                             Origin = Anchor.CentreLeft

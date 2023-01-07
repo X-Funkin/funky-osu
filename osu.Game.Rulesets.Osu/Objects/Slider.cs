@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Osu.Objects
         public double EndTime => StartTime + this.SpanCount() * Path.Distance / Velocity;
 
         [JsonIgnore]
-        public double Duration
+        public double Duration 
         {
             get => EndTime - StartTime;
             set => throw new System.NotSupportedException($"Adjust via {nameof(RepeatCount)} instead"); // can be implemented if/when needed.

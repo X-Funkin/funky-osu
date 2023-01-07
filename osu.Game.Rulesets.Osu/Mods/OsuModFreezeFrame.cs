@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Osu.Mods
                         case SliderTick:
                         //SliderRepeat wont layer correctly if preempt is changed.
                         case SliderRepeat:
-                            break;
+                            break; 
 
                         default:
                             applyFadeInAdjustment(nested);

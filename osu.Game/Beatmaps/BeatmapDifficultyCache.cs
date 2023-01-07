@@ -93,7 +93,7 @@ namespace osu.Game.Beatmaps
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> which stops updating the star difficulty for the given <see cref="BeatmapInfo"/>.</param>
         /// <returns>A bindable that is updated to contain the star difficulty when it becomes available. Will be null while in an initial calculating state (but not during updates to ruleset and mods if a stale value is already propagated).</returns>
         public IBindable<StarDifficulty?> GetBindableDifficulty(IBeatmapInfo beatmapInfo, CancellationToken cancellationToken = default)
-        {
+        { 
             var bindable = new BindableStarDifficulty(beatmapInfo, cancellationToken);
 
             updateBindable(bindable, currentRuleset.Value, currentMods.Value, cancellationToken);

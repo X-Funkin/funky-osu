@@ -12,6 +12,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
+using osu.Framework.Localisation;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Overlays;
@@ -37,6 +38,14 @@ namespace osu.Game.Beatmaps.Drawables
             get => current.Current;
             set => current.Current = value;
         }
+
+        public Bindable<double> BaseStars = new BindableDouble(0.0);
+
+        public Bindable<double> testMultiplier = new BindableDouble(1.0);
+
+        private readonly Bindable<double> starMultiplier = new BindableDouble(1.0);
+
+        public IBindable<double> DisplayedMultiplier => starMultiplier;
 
         private readonly Bindable<double> displayedStars = new BindableDouble();
 
@@ -147,17 +156,39 @@ namespace osu.Game.Beatmaps.Drawables
                     displayedStars.Value = c.NewValue.Stars;
             });
 
+            testMultiplier.BindValueChanged(c =>
+            {
+                if (animated)
+                    this.TransformBindableTo(starMultiplier, c.NewValue, 750, Easing.OutQuint);
+                else
+                    starMultiplier.Value = c.NewValue;
+            });
+
             displayedStars.Value = Current.Value.Stars;
+            starMultiplier.Value = testMultiplier.Value;
 
             displayedStars.BindValueChanged(s =>
             {
-                starsText.Text = s.NewValue < 0 ? "-" : s.NewValue.ToLocalisableString("0.00");
+                // starsText.Text = s.NewValue < 0 ? "-" : s.NewValue.ToLocalisableString("0.00");
+                starsText.Text = GetDisplayString();
 
                 background.Colour = colours.ForStarDifficulty(s.NewValue);
 
                 starIcon.Colour = s.NewValue >= 6.5 ? colours.Orange1 : colourProvider?.Background5 ?? Color4Extensions.FromHex("303d47");
                 starsText.Colour = s.NewValue >= 6.5 ? colours.Orange1 : colourProvider?.Background5 ?? Color4.Black.Opacity(0.75f);
             }, true);
+
+            starMultiplier.BindValueChanged(s =>
+            {
+                starsText.Text = GetDisplayString();
+            });
+
+
+        }
+
+        private LocalisableString GetDisplayString(){
+            LocalisableString display_string = displayedStars.Value < 0 ? "-" : (starMultiplier.Value == 1.0) ? displayedStars.Value.ToLocalisableString("0.00") : (LocalisableString)$"{displayedStars.Value:N2} ({starMultiplier.Value:#0.00}x)";
+            return display_string;
         }
     }
 
