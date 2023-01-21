@@ -132,13 +132,7 @@ namespace osu.Game.Beatmaps.Formats
 
         protected KeyValuePair<string, string> SplitKeyVal(string line, char separator = ':', bool shouldTrim = true)
         {
-            string[] split = line.Split(separator, 2);
-
-            if (shouldTrim)
-            {
-                for (int i = 0; i < split.Length; i++)
-                    split[i] = split[i].Trim();
-            }
+            string[] split = line.Split(separator, 2, shouldTrim ? StringSplitOptions.TrimEntries : StringSplitOptions.None);
 
             return new KeyValuePair<string, string>
             (
@@ -147,7 +141,11 @@ namespace osu.Game.Beatmaps.Formats
             );
         }
 
-        protected string CleanFilename(string path) => path.Trim('"').ToStandardisedPath();
+        protected string CleanFilename(string path) => path
+                                                       // User error which is supported by stable (https://github.com/ppy/osu/issues/21204)
+                                                       .Replace(@"\\", @"\")
+                                                       .Trim('"')
+                                                       .ToStandardisedPath();
 
         public enum Section
         {

@@ -1,21 +1,20 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-#nullable disable
-
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using osu.Framework.Input;
+using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
-using osu.Framework.Input.StateChanges.Events;
 using osu.Game.Input.Bindings;
+using osu.Game.Rulesets.Osu.UI;
 using osu.Game.Rulesets.UI;
 
 namespace osu.Game.Rulesets.Osu
 {
-    public class OsuInputManager : RulesetInputManager<OsuAction>
+    public partial class OsuInputManager : RulesetInputManager<OsuAction>
     {
         public IEnumerable<OsuAction> PressedActions => KeyBindingContainer.PressedActions;
 
@@ -28,6 +27,7 @@ namespace osu.Game.Rulesets.Osu
         /// </remarks>
         public bool AllowGameplayInputs
         {
+            get => ((OsuKeyBindingContainer)KeyBindingContainer).AllowGameplayInputs;
             set => ((OsuKeyBindingContainer)KeyBindingContainer).AllowGameplayInputs = value;
         }
 
@@ -45,6 +45,12 @@ namespace osu.Game.Rulesets.Osu
         {
         }
 
+        [BackgroundDependencyLoader]
+        private void load()
+        {
+            Add(new OsuTouchInputMapper(this) { RelativeSizeAxes = Axes.Both });
+        }
+
         protected override bool Handle(UIEvent e)
         {
             if ((e is MouseMoveEvent || e is TouchMoveEvent) && !AllowUserCursorMovement) return false;
@@ -52,20 +58,7 @@ namespace osu.Game.Rulesets.Osu
             return base.Handle(e);
         }
 
-        protected override bool HandleMouseTouchStateChange(TouchStateChangeEvent e)
-        {
-            if (!AllowUserCursorMovement)
-            {
-                // Still allow for forwarding of the "touch" part, but replace the positional data with that of the mouse.
-                // Primarily relied upon by the "autopilot" osu! mod.
-                var touch = new Touch(e.Touch.Source, CurrentState.Mouse.Position);
-                e = new TouchStateChangeEvent(e.State, e.Input, touch, e.IsActive, null);
-            }
-
-            return base.HandleMouseTouchStateChange(e);
-        }
-
-        private class OsuKeyBindingContainer : RulesetKeyBindingContainer
+        private partial class OsuKeyBindingContainer : RulesetKeyBindingContainer
         {
             private bool allowGameplayInputs = true;
 

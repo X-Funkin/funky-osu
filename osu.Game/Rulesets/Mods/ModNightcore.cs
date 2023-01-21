@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Mods
         };
     }
 
-    public abstract class ModNightcore<TObject> : ModNightcore, IApplicableToDrawableRuleset<TObject>
+    public abstract partial class ModNightcore<TObject> : ModNightcore, IApplicableToDrawableRuleset<TObject>
         where TObject : HitObject
     {
         private readonly BindableNumber<double> tempoAdjust = new BindableDouble(1);
@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Mods
             drawableRuleset.Overlays.Add(new NightcoreBeatContainer());
         }
 
-        public class NightcoreBeatContainer : BeatSyncedContainer
+        public partial class NightcoreBeatContainer : BeatSyncedContainer
         {
             private PausableSkinnableSound? hatSample;
             private PausableSkinnableSound? clapSample;

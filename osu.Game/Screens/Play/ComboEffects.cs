@@ -17,7 +17,7 @@ using osu.Framework.Logging;
 
 namespace osu.Game.Screens.Play
 {
-    public class ComboEffects : CompositeDrawable
+    public partial class ComboEffects : CompositeDrawable
     {
         private readonly ScoreProcessor processor;
 
