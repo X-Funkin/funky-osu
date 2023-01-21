@@ -67,6 +67,33 @@ namespace osu.Game.Overlays.Settings.Sections.Gameplay
                     KeyboardStep = 1.0f
 
                 },
+                new SettingsCheckbox
+                {
+                    ClassicDefault = false,
+                    LabelText = GameplaySettingsStrings.PanMusicByHitError,
+                    Current = config.GetBindable<bool>(OsuSetting.PanMusicByHitError)
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = GameplaySettingsStrings.PanMusicMinHitError,
+                    Current = osuConfig.GetBindable<float>(OsuSetting.PanMusicMinHitError),
+                    KeyboardStep = 1.0f
+
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = GameplaySettingsStrings.PanMusicMaxHitError,
+                    Current = osuConfig.GetBindable<float>(OsuSetting.PanMusicMaxHitError),
+                    KeyboardStep = 1.0f
+
+                },
+                new SettingsSlider<float>
+                {
+                    LabelText = GameplaySettingsStrings.PanMusicAmount,
+                    Current = osuConfig.GetBindable<float>(OsuSetting.PanMusicAmount),
+                    KeyboardStep = 0.1f,
+                    DisplayAsPercentage = true
+                },
             };
         }
     }

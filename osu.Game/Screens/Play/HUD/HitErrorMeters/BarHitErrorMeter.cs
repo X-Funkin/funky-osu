@@ -24,7 +24,7 @@ using osu.Framework.Logging;
 
 namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 {
-    [Cached]
+    [Cached] 
     public class BarHitErrorMeter : HitErrorMeter
     {
         [SettingSource("Judgement line thickness", "How thick the individual lines should be.")]

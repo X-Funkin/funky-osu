@@ -13,6 +13,8 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Judgements;
 using osu.Game.Skinning;
 
+using osu.Framework.Logging;
+
 namespace osu.Game.Screens.Play
 {
     public class ComboEffects : CompositeDrawable
@@ -20,6 +22,8 @@ namespace osu.Game.Screens.Play
         private readonly ScoreProcessor processor;
 
         private SkinnableSound comboBreakSample;
+        // private SkinnableSound comboBreakEarlySample;
+        // private SkinnableSound comboBreakLateSample;
 
         private Bindable<bool> alwaysPlayFirst;
 
@@ -81,7 +85,12 @@ namespace osu.Game.Screens.Play
                     return;
                 // comboBreakSample?.Balance = Math.Sign(judgement.TimeOffset); 
                 comboBreakSample?.Balance.Set(Math.Sign(judgement.TimeOffset)/2.0);
+                // comboBreakSample?.
+                comboBreakSample?.Frequency.Set(judgement.TimeOffset<0? 2:1);//judgement.TimeOffset<=1000? 0.8:1);
                 comboBreakSample?.Play();
+                // Logger.Log(@$"osu miss L {judgement.TimeOffset}");
+
+
             }
         }
 

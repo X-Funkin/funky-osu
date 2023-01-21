@@ -111,6 +111,26 @@ namespace osu.Game.Localisation
         public static LocalisableString PitchShiftRange => new TranslatableString(getKey(@"pitch_shift_range"), @"Pitch-Shift Range");
 
         /// <summary>
+        /// "Pan Music By Average Hit Error"
+        /// </summary>
+
+        public static LocalisableString PanMusicByHitError => new TranslatableString(getKey(@"pan_music_by_hit_error"), @"Pan Music By Average Hit Error");
+        /// <summary>
+        /// "Pan Music Minimum Hit Error"
+        /// </summary>
+
+        public static LocalisableString PanMusicMinHitError => new TranslatableString(getKey(@"pan_music_min_hit_error"), @"Pan Music Minimum Hit Error");
+        /// <summary>
+        /// "Pan Music Maximum Hit Error"
+        /// </summary>
+
+        public static LocalisableString PanMusicMaxHitError => new TranslatableString(getKey(@"pan_music_by_hit_error"), @"Pan Music Maximum Hit Error");
+        /// <summary>
+        /// "Pan Music Amount"
+        /// </summary>
+
+        public static LocalisableString PanMusicAmount => new TranslatableString(getKey(@"pan_music_amount"), @"Pan Music Amount");
+        /// <summary>
         /// "Score display mode"
         /// </summary>
         public static LocalisableString ScoreDisplayMode => new TranslatableString(getKey(@"score_display_mode"), @"Score display mode");

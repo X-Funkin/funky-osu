@@ -33,6 +33,8 @@ using osu.Game.Rulesets;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.UI;
+
+using osu.Game.Rulesets.Judgements;
 using osu.Game.Scoring;
 using osu.Game.Scoring.Legacy;
 using osu.Game.Screens.Play.HUD;
@@ -123,6 +125,17 @@ namespace osu.Game.Screens.Play
         /// </summary>
         public readonly IBindable<bool> IsBreakTime = new BindableBool();
 
+
+
+        private Bindable<bool> PanMusicByHitError = new BindableBool();
+        private Bindable<float> PanMusicMinHitError = new BindableFloat(0.0f);
+        private Bindable<float> PanMusicMaxHitError = new BindableFloat(50.0f);
+        private Bindable<float> PanMusicAmount = new BindableFloat(0.0f);
+
+        private Bindable<double> CurrentPanningAmount = new BindableDouble(0.0f);
+
+        private double floatingAverage; // for the audio panning like thing yeah
+
         private BreakTracker breakTracker;
 
         private SkipOverlay skipIntroOverlay;
@@ -183,8 +196,34 @@ namespace osu.Game.Screens.Play
             ScoreProcessor.NewJudgement += _ => ScoreProcessor.PopulateScore(Score.ScoreInfo);
             ScoreProcessor.OnResetFromReplayFrame += () => ScoreProcessor.PopulateScore(Score.ScoreInfo);
 
+            ScoreProcessor.NewJudgement += onNewJudgement;
             gameActive.BindValueChanged(_ => updatePauseOnFocusLostState(), true);
+            // PanAudioAmount.Value = 1.0;
         }
+
+        private void onNewJudgement(JudgementResult judgement){
+            const int panning_duration = 800;
+            if (!judgement.IsHit || judgement.HitObject.HitWindows?.WindowFor(HitResult.Miss) == 0)
+                return;
+
+            if (!judgement.Type.IsScorable() || judgement.Type.IsBonus())
+                return;
+            // PanAudioAmount.TransformBindableTo()
+            floatingAverage = floatingAverage*0.9+judgement.TimeOffset*0.1;
+            double hitBalance = CalculateBalanceFromHitError(floatingAverage);
+            this.TransformBindableTo(CurrentPanningAmount, hitBalance, panning_duration, Easing.OutQuint);
+            // this.TransformBindableTo(PanAudioAmount, floatingAverage = floatingAverage * 0.9 + judgement.TimeOffset/50.0 * 0.1, panning_duration, Easing.OutQuint);
+            // PanAudioAmount.Value = judgement.TimeOffset/50.0;
+        }
+
+        private double CalculateBalanceFromHitError(double hiterror){
+            if(!PanMusicByHitError.Value){return 0.0;};
+            double abs_panning = mapRange(Math.Abs((float)hiterror),PanMusicMinHitError.Value, PanMusicMaxHitError.Value, 0.0f, PanMusicAmount.Value);
+            abs_panning = Math.Clamp(abs_panning, 0.0, PanMusicAmount.Value);
+            return abs_panning*Math.Sign(hiterror);
+        }
+
+        
 
         /// <summary>
         /// Run any recording / playback setup for replays.
@@ -192,6 +231,12 @@ namespace osu.Game.Screens.Play
         protected virtual void PrepareReplay()
         {
             DrawableRuleset.SetRecordTarget(Score);
+        }
+        
+        // POV: You should really make this a built in solution
+        private static float mapRange(float value, float fromLow, float fromHigh, float toLow, float toHigh)
+        {
+            return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
         }
 
         [BackgroundDependencyLoader(true)]
@@ -214,6 +259,12 @@ namespace osu.Game.Screens.Play
                 return;
 
             sampleRestart = audio.Samples.Get(@"Gameplay/restart");
+            // musicController.CurrentTrack.Balance; // probably the thing i want
+            CurrentPanningAmount.BindTo(musicController.CurrentTrack.Balance);
+            PanMusicByHitError = config.GetBindable<bool>(OsuSetting.PanMusicByHitError);
+            PanMusicAmount = config.GetBindable<float>(OsuSetting.PanMusicAmount);
+            PanMusicMinHitError = config.GetBindable<float>(OsuSetting.PanMusicMinHitError);
+            PanMusicMaxHitError = config.GetBindable<float>(OsuSetting.PanMusicMaxHitError);
 
             mouseWheelDisabled = config.GetBindable<bool>(OsuSetting.MouseDisableWheel);
 
@@ -737,7 +788,7 @@ namespace osu.Game.Screens.Play
 
             if (!Configuration.ShowResults)
                 return;
-
+            
             prepareScoreForDisplayTask ??= Task.Run(prepareAndImportScore);
 
             bool storyboardHasOutro = DimmableStoryboard.ContentDisplayed && !DimmableStoryboard.HasStoryboardEnded.Value;
@@ -1037,7 +1088,7 @@ namespace osu.Game.Screens.Play
                 mod.ApplyToHUD(HUDOverlay);
 
             foreach (var mod in GameplayState.Mods.OfType<IApplicableToTrack>())
-                mod.ApplyToTrack(GameplayClockContainer.AdjustmentsFromMods);
+                mod.ApplyToTrack(GameplayClockContainer.AdjustmentsFromMods); 
 
             updateGameplayState();
 

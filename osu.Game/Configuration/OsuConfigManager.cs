@@ -124,6 +124,10 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.PitchShiftMinHitError, 10.0f, 0f, 100f, 1);
             SetDefault(OsuSetting.PitchShiftMaxHitError, 100.0f, 0f, 100f, 1);
             SetDefault(OsuSetting.PitchShiftRange, 12.0f, 0f, 24f, 1);
+            SetDefault(OsuSetting.PanMusicByHitError, false);
+            SetDefault(OsuSetting.PanMusicMinHitError, 0.0f, 0.0f, 100.0f, 1);
+            SetDefault(OsuSetting.PanMusicMaxHitError, 50.0f, 0.0f, 100.0f, 1);
+            SetDefault(OsuSetting.PanMusicAmount, 1.0f, 0.0f, 1.0f,0.01f);
             SetDefault(OsuSetting.DimLevel, 0.7, 0, 1, 0.01);
             SetDefault(OsuSetting.BlurLevel, 0, 0, 1, 0.01);
             SetDefault(OsuSetting.LightenDuringBreaks, true);
@@ -319,6 +323,12 @@ namespace osu.Game.Configuration
         PitchShiftMaxHitError,
         PitchShiftMinHitError,
         PitchShiftRange,
+
+        PanMusicByHitError,
+        PanMusicMaxHitError,
+        PanMusicMinHitError,
+
+        PanMusicAmount,
         
         AlwaysPlayFirstComboBreak,
 

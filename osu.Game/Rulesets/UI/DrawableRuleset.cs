@@ -110,6 +110,8 @@ namespace osu.Game.Rulesets.UI
         /// </remarks>
         public IAdjustableAudioComponent Audio { get; private set; }
 
+        private readonly BindableNumber<double> panAudio = new BindableDouble(-1.0);
+
         public Bindable<double> thisBalance = new Bindable<double>(-1.0);
 
         /// <summary>
@@ -151,6 +153,7 @@ namespace osu.Game.Rulesets.UI
 
                 KeyBindingInputManager.UseParentInput = !paused.NewValue;
             };
+            // Audio.AddAdjustment(AdjustableProperty.Balance, panAudio);
         }
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
