@@ -19,7 +19,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Screens.Play.HUD
 {
-    public class CopyPastas : RollingCounter<double>, ISkinnableDrawable
+    public partial class CopyPastas : RollingCounter<double>, ISkinnableDrawable
     {
         [Resolved]
         private ScoreProcessor processor { get; set; }

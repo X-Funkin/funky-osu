@@ -18,7 +18,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Screens.Play.HUD
 {
-    public class CavemanEarlyLateJudgements : RollingCounter<double>, ISkinnableDrawable
+    public partial class CavemanEarlyLateJudgements : RollingCounter<double>, ISkinnableDrawable
     {
         [Resolved]
         private ScoreProcessor processor { get; set; }

@@ -22,7 +22,7 @@ using osuTK;
 
 namespace osu.Game.Screens.Play.HUD.HitErrorMeters
 {
-    public class HitErrorMeasure : HitErrorMeter
+    public partial class HitErrorMeasure : HitErrorMeter
     {
         private const int arrow_move_duration = 400;
 

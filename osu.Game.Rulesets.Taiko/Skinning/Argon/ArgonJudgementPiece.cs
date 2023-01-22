@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Argon
         [Resolved]
         private OsuColour colours { get; set; } = null!;
 
-        public ArgonJudgementPiece(HitResult result)
+        public ArgonJudgementPiece(JudgementResult result)
             : base(result)
         {
             RelativePositionAxes = Axes.Both;

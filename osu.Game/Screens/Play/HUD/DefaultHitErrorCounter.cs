@@ -18,7 +18,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Screens.Play.HUD
 {
-    public class DefaultHitErrorCounter : RollingCounter<double>, ISkinnableDrawable
+    public partial class DefaultHitErrorCounter : RollingCounter<double>, ISkinnableDrawable
     {
         [Resolved]
         private ScoreProcessor processor { get; set; }

@@ -7,7 +7,7 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Screens.Ranking.Statistics
 {
-    public class NotesTopSpeed : SimpleStatisticItem<double?>
+    public partial class NotesTopSpeed : SimpleStatisticItem<double?>
     {
         // public int NoteCount = 10;
         /// <summary>

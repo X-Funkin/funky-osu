@@ -13,15 +13,17 @@ namespace osu.Game.Rulesets.Judgements
     public abstract partial class JudgementPiece : CompositeDrawable
     {
         protected readonly HitResult Result;
+        protected readonly JudgementResult judgementResult;
 
         protected SpriteText JudgementText { get; private set; } = null!;
 
         [Resolved]
         private OsuColour colours { get; set; } = null!;
 
-        protected JudgementPiece(HitResult result)
+        protected JudgementPiece(JudgementResult result)
         {
-            Result = result;
+            Result = result.Type;
+            judgementResult = result;
         }
 
         [BackgroundDependencyLoader]

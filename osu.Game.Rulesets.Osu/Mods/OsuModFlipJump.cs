@@ -39,8 +39,8 @@ namespace osu.Game.Rulesets.Osu.Mods
                 if(hitObject is Spinner){continue;};
                 Vector2 hobject_pos = normalize_position(hitObject.Position);
                 if(Vector2.Dot(prev_position,hobject_pos)>0){
-                    OsuHitObjectGenerationUtils.ReflectHorizontally(hitObject);
-                    OsuHitObjectGenerationUtils.ReflectVertically(hitObject);
+                    OsuHitObjectGenerationUtils.ReflectHorizontallyAlongPlayfield(hitObject);
+                    OsuHitObjectGenerationUtils.ReflectVerticallyAlongPlayfield(hitObject);
                 }
                 // hitObject.Position = new Vector2(512,384);
                 // hitObject.Position = 0;

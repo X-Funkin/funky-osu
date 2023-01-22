@@ -10,7 +10,7 @@ namespace osu.Game.Screens.Ranking.Statistics
     /// <summary>
     /// Displays the unstable rate statistic for a given play.
     /// </summary>
-    public class HitErrorStandardDeviation : SimpleStatisticItem<double?>
+    public partial class HitErrorStandardDeviation : SimpleStatisticItem<double?>
     {
         /// <summary>
         /// Creates and computes an <see cref="HitErrorStandardDeviation"/> statistic.

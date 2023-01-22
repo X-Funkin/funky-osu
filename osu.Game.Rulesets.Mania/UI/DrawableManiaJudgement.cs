@@ -54,10 +54,10 @@ namespace osu.Game.Rulesets.Mania.UI
                 JudgementText.Font = JudgementText.Font.With(size: 25);
                 // JudgementText.Text = JudgementText.Text + " Bazinga " + TimeOffset;
                 string new_text = $@"{JudgementText.Text}";
-                if (TimeOffset<0){
+                if (judgementResult.TimeOffset<0){
                     new_text = "<<<"+new_text;
                 }
-                else if (TimeOffset>0){
+                else if (judgementResult.TimeOffset>0){
                     new_text = new_text+">>>";
                 }
                 

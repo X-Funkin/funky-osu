@@ -14,12 +14,12 @@ namespace osu.Game.Rulesets.Judgements
 {
     public partial class DefaultJudgementPiece : JudgementPiece, IAnimatableJudgement
     {
-        public DefaultJudgementPiece(HitResult result)
+        public DefaultJudgementPiece(JudgementResult result)
             : base(result)
         {
             AutoSizeAxes = Axes.Both;
             
-            Logger.Log(@$"hit that yeah {TimeOffset}");
+            // Logger.Log(@$"hit that yeah {TimeOffset}");
 
             Origin = Anchor.Centre;
         }

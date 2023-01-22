@@ -212,6 +212,6 @@ namespace osu.Game.Rulesets.Judgements
             }
         }
 
-        protected virtual Drawable CreateDefaultJudgement(JudgementResult result) => new DefaultJudgementPiece(result);
+        protected virtual Drawable CreateDefaultJudgement(JudgementResult result) => new DefaultJudgementPiece(result); 
     }
 }

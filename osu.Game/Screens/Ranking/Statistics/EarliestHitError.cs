@@ -10,7 +10,7 @@ namespace osu.Game.Screens.Ranking.Statistics
     /// <summary>
     /// Displays the unstable rate statistic for a given play.
     /// </summary>
-    public class EarliestHitError : SimpleStatisticItem<double?>
+    public partial class EarliestHitError : SimpleStatisticItem<double?>
     {
         /// <summary>
         /// Creates and computes an <see cref="EarliestHitError"/> statistic.

@@ -72,7 +72,7 @@ namespace osu.Game.Rulesets.Osu.Objects.Drawables
             public OsuJudgementPiece(JudgementResult result)
                 : base(result)
             {
-                TimeOffset = result.TimeOffset;
+                // judgementResult.TimeOffset = result.TimeOffset;
             }
 
             public override void PlayAnimation()

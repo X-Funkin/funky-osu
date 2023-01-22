@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Mania.Skinning.Argon
         [Resolved]
         private OsuColour colours { get; set; } = null!;
 
-        public ArgonJudgementPiece(HitResult result)
+        public ArgonJudgementPiece(JudgementResult result)
             : base(result)
         {
             AutoSizeAxes = Axes.Both;
